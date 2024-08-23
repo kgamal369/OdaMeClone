@@ -1,0 +1,117 @@
+{
+  "version": 2,
+  "dgSpecHash": "7O961l9kvio=",
+  "success": false,
+  "projectFilePath": "Z:\\OdaMeClone\\OdaMeClone.csproj",
+  "expectedPackageFiles": [],
+  "logs": [
+    {
+      "code": "NU1301",
+      "level": "Error",
+      "message": "The local source 'C:\\drive_z\\mes-workspace\\ap-sms-plasma-query\\bin\\Debug' doesn't exist.",
+      "libraryId": "Microsoft.AspNetCore.OpenApi"
+    },
+    {
+      "code": "NU1301",
+      "level": "Error",
+      "message": "The local source 'C:\\drive_z\\mes-workspace\\sms-mes-revamp-CRUD-be\\bin\\Debug' doesn't exist.",
+      "libraryId": "Microsoft.AspNetCore.OpenApi"
+    },
+    {
+      "code": "NU1301",
+      "level": "Error",
+      "message": "The local source 'C:\\drive_z\\mes-workspace\\sms-mes-revamp-datatypesystem-be\\bin\\Debug' doesn't exist.",
+      "libraryId": "Microsoft.AspNetCore.OpenApi"
+    },
+    {
+      "code": "NU1301",
+      "level": "Error",
+      "message": "The local source 'C:\\drive_z\\mes-workspace\\sms-mes-revamp-uommanagement-be\\bin\\Debug' doesn't exist.",
+      "libraryId": "Microsoft.AspNetCore.OpenApi"
+    },
+    {
+      "code": "NU1301",
+      "level": "Error",
+      "message": "The local source 'C:\\drive_z\\mes-workspace\\sms-mes-revamp-thingandprofile-be\\bin\\Debug' doesn't exist.",
+      "libraryId": "Microsoft.AspNetCore.OpenApi"
+    },
+    {
+      "code": "NU1301",
+      "level": "Error",
+      "message": "The local source 'C:\\drive_z\\mes-workspace\\sms-mes-revamp-plasma-modules-be\\bin\\Debug' doesn't exist.",
+      "libraryId": "Microsoft.AspNetCore.OpenApi"
+    },
+    {
+      "code": "NU1301",
+      "level": "Error",
+      "message": "The local source 'C:\\drive_z\\mes-workspace\\ap-sms-plasma-query\\bin\\Debug' doesn't exist.",
+      "libraryId": "Npgsql.EntityFrameworkCore.PostgreSQL"
+    },
+    {
+      "code": "NU1301",
+      "level": "Error",
+      "message": "The local source 'C:\\drive_z\\mes-workspace\\sms-mes-revamp-CRUD-be\\bin\\Debug' doesn't exist.",
+      "libraryId": "Npgsql.EntityFrameworkCore.PostgreSQL"
+    },
+    {
+      "code": "NU1301",
+      "level": "Error",
+      "message": "The local source 'C:\\drive_z\\mes-workspace\\sms-mes-revamp-datatypesystem-be\\bin\\Debug' doesn't exist.",
+      "libraryId": "Npgsql.EntityFrameworkCore.PostgreSQL"
+    },
+    {
+      "code": "NU1301",
+      "level": "Error",
+      "message": "The local source 'C:\\drive_z\\mes-workspace\\sms-mes-revamp-uommanagement-be\\bin\\Debug' doesn't exist.",
+      "libraryId": "Npgsql.EntityFrameworkCore.PostgreSQL"
+    },
+    {
+      "code": "NU1301",
+      "level": "Error",
+      "message": "The local source 'C:\\drive_z\\mes-workspace\\sms-mes-revamp-thingandprofile-be\\bin\\Debug' doesn't exist.",
+      "libraryId": "Npgsql.EntityFrameworkCore.PostgreSQL"
+    },
+    {
+      "code": "NU1301",
+      "level": "Error",
+      "message": "The local source 'C:\\drive_z\\mes-workspace\\ap-sms-plasma-query\\bin\\Debug' doesn't exist.",
+      "libraryId": "Swashbuckle.AspNetCore"
+    },
+    {
+      "code": "NU1301",
+      "level": "Error",
+      "message": "The local source 'C:\\drive_z\\mes-workspace\\sms-mes-revamp-CRUD-be\\bin\\Debug' doesn't exist.",
+      "libraryId": "Swashbuckle.AspNetCore"
+    },
+    {
+      "code": "NU1301",
+      "level": "Error",
+      "message": "The local source 'C:\\drive_z\\mes-workspace\\sms-mes-revamp-datatypesystem-be\\bin\\Debug' doesn't exist.",
+      "libraryId": "Swashbuckle.AspNetCore"
+    },
+    {
+      "code": "NU1301",
+      "level": "Error",
+      "message": "The local source 'C:\\drive_z\\mes-workspace\\sms-mes-revamp-plasma-modules-be\\bin\\Debug' doesn't exist.",
+      "libraryId": "Npgsql.EntityFrameworkCore.PostgreSQL"
+    },
+    {
+      "code": "NU1301",
+      "level": "Error",
+      "message": "The local source 'C:\\drive_z\\mes-workspace\\sms-mes-revamp-uommanagement-be\\bin\\Debug' doesn't exist.",
+      "libraryId": "Swashbuckle.AspNetCore"
+    },
+    {
+      "code": "NU1301",
+      "level": "Error",
+      "message": "The local source 'C:\\drive_z\\mes-workspace\\sms-mes-revamp-thingandprofile-be\\bin\\Debug' doesn't exist.",
+      "libraryId": "Swashbuckle.AspNetCore"
+    },
+    {
+      "code": "NU1301",
+      "level": "Error",
+      "message": "The local source 'C:\\drive_z\\mes-workspace\\sms-mes-revamp-plasma-modules-be\\bin\\Debug' doesn't exist.",
+      "libraryId": "Swashbuckle.AspNetCore"
+    }
+  ]
+}
