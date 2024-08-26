@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "Z:\\OdaMeClone\\OdaMeClone.csproj": {}
+    "C:\\drive_z\\OdaMeClone\\OdaMeClone.csproj": {}
   },
   "projects": {
-    "Z:\\OdaMeClone\\OdaMeClone.csproj": {
+    "C:\\drive_z\\OdaMeClone\\OdaMeClone.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "Z:\\OdaMeClone\\OdaMeClone.csproj",
+        "projectUniqueName": "C:\\drive_z\\OdaMeClone\\OdaMeClone.csproj",
         "projectName": "OdaMeClone",
-        "projectPath": "Z:\\OdaMeClone\\OdaMeClone.csproj",
-        "packagesPath": "C:\\Users\\elka01\\.nuget\\packages\\",
-        "outputPath": "Z:\\OdaMeClone\\obj\\",
+        "projectPath": "C:\\drive_z\\OdaMeClone\\OdaMeClone.csproj",
+        "packagesPath": "C:\\Users\\tmpadm\\.nuget\\packages\\",
+        "outputPath": "C:\\drive_z\\OdaMeClone\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\DevExpress 20.2\\Components\\Offline Packages",
@@ -19,7 +19,7 @@
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "C:\\Users\\elka01\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\tmpadm\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 20.2.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
@@ -31,14 +31,7 @@
           "C:\\Program Files (x86)\\DevExpress 20.2\\Components\\System\\Components\\Packages": {},
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "C:\\Program Files\\dotnet\\library-packs": {},
-          "C:\\drive_z\\mes-workspace\\ap-sms-plasma-query\\bin\\Debug": {},
-          "C:\\drive_z\\mes-workspace\\sms-mes-revamp-CRUD-be\\bin\\Debug": {},
-          "C:\\drive_z\\mes-workspace\\sms-mes-revamp-datatypesystem-be\\bin\\Debug": {},
-          "C:\\drive_z\\mes-workspace\\sms-mes-revamp-plasma-modules-be\\bin\\Debug": {},
-          "C:\\drive_z\\mes-workspace\\sms-mes-revamp-thingandprofile-be\\bin\\Debug": {},
-          "C:\\drive_z\\mes-workspace\\sms-mes-revamp-uommanagement-be\\bin\\Debug": {},
-          "https://api.nuget.org/v3/index.json": {},
-          "https://jfrog.tech.sms-digital.cloud/artifactory/api/nuget/v3/sdi-nuget": {}
+          "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
@@ -61,9 +54,19 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "Microsoft.AspNetCore.Mvc.Core": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[8.0.5, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[8.0.8, )"
             },
             "Npgsql.EntityFrameworkCore.PostgreSQL": {
               "target": "Package",

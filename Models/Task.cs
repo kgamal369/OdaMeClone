@@ -1,15 +1,62 @@
-public class Task
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace OdaMeClone.Models
 {
-    public int Id { get; set; }
-    public string Name { get; set; }
-    public string Description { get; set; }
-    public string Status { get; set; }
-    public int AssignedTo { get; set; }
-    public User Assignee { get; set; }
-    public int ProjectId { get; set; }
-    public Project Project { get; set; }
-    public string Priority { get; set; }
-    public DateTime DueDate { get; set; }
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+    public enum TaskStatus
+    {
+        Active,
+        InProgress,
+        Pending
+    }
+
+    public class Task
+    {
+        [Key]
+        public int Id { get; set; }
+
+        [Required]
+        public string Name { get; set; }
+
+        [Required]
+        public string Description { get; set; }
+
+        [Required]
+        public double ManHoursRequired { get; set; }
+
+        [Required]
+        public int ResourceId { get; set; }
+        [ForeignKey("ResourceId")]
+        public Resource Resource { get; set; }
+
+        [Required]
+        public int FeatureId { get; set; }
+        [ForeignKey("FeatureId")]
+        public Feature Feature { get; set; }
+
+        [Required]
+        public int ApartmentId { get; set; }
+        [ForeignKey("ApartmentId")]
+        public Apartment Apartment { get; set; }
+
+        public int? InvoiceId { get; set; }
+        [ForeignKey("InvoiceId")]
+        public Invoice Invoice { get; set; }
+
+        [Required]
+        public int ProjectId { get; set; }
+        [ForeignKey("ProjectId")]
+        public Project Project { get; set; }
+
+        [Required]
+        public string Assignee { get; set; } // Assuming Assignee is a string representing the person assigned to the task
+
+        [Required]
+        public TaskStatus Status { get; set; } = TaskStatus.Pending;
+
+        public double CalculateTaskCost()
+        {
+            return ManHoursRequired * (Resource.CostPerHour ?? 0);
+        }
+    }
 }
