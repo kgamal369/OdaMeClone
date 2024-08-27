@@ -2,9 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using OdaMeClone.Models;
 
 namespace OdaMeClone.Data
-{
-    public class OdaDbContext : DbContext
     {
+    public class OdaDbContext : DbContext
+        {
         public OdaDbContext(DbContextOptions<OdaDbContext> options) : base(options) { }
 
         public DbSet<User> Users { get; set; }
@@ -19,7 +19,7 @@ namespace OdaMeClone.Data
         public DbSet<Customer> Customers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
+            {
             // User-Role Relationship
             modelBuilder.Entity<User>()
                 .HasKey(u => u.Id);
@@ -110,6 +110,6 @@ namespace OdaMeClone.Data
                 .WithMany(a => a.Features)
                 .HasForeignKey(f => f.ApartmentId)
                 .OnDelete(DeleteBehavior.Cascade);
+            }
         }
     }
-}

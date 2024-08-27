@@ -1,0 +1,60 @@
+this is my current project structure 
+
+1. Controllers Folder - namespace OdaMeClone.Controllers- contain : 
+    1.1. AccountController.cs
+    1.2. ApartmentController.cs
+    1.2. BaseController.cs
+    1.3. FeatureController.cs 
+    1.4. InvoiceController.cs 
+    1.5. PaymentController.cs
+    1.6. ProjectController.cs
+    1.7. ResourceController.cs
+    1.8. TaskController.cs
+
+2. Data Folder -namespace OdaMeClone.Data - contain : 
+    2.1.Repositories
+        2.1.1.GenericRepository.cs
+        2.1.2.IGenericRepository.cs
+        2.1.3.UserRepository.cs
+    2.2.Seeders
+        2.2.1.OdaDbSeeder.cs
+    2.1.OdaDbContext.cs 
+
+3. Dto Folder - namespace OdaMeClone.Dtos - Contain :
+    3.1.Auth
+        3.1.1. ConfirmaEmailDto.cs
+        3.1.2. LoginDto.cs
+        3.1.3. PasswordResetRequestDto.cs
+        3.1.4. UserDto.cs
+    3.2.Projects
+
+4. Models Folder -namespace OdaMeClone.Models - Contain :
+    4.1.Entities    
+        4.1.1. Apartment.cs
+        4.1.2. Customer.cs
+        4.1.3. Invoice.cs
+        4.1.4. Project.cs
+        4.1.5. Resource.cs
+        4.1.6. Role.cs
+        4.1.7. RolePermission.cs
+        4.1.8. Task.cs
+        4.1.9. User.cs
+    4.2.ViewModels
+
+5.Properties Folder contain : 
+    5.1.LaunchSettings.json
+
+6. Services Folder - namespace OdaMeClone.Services - Contain : 
+    6.1.Authentication
+        6.1.1. IPasswordHasher.cs
+        6.1.2. PasswordHasher.cs
+    6.2.Email
+    6.3.Projects
+
+7.appsettings.json
+8.appsetting.Development.json
+9.OdaMeclone.csproj
+10.OdaMeclone.csproj.user
+11.OdaMeclone.generated.sln
+12.OdaMeclone.http
+13.Program.cs
