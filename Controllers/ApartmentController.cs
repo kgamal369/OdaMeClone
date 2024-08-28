@@ -5,6 +5,7 @@ using OdaMeClone.Models;
 
 namespace OdaMeClone.Controllers
     {
+        /*
     [Route("api/[controller]")]
     [ApiController]
     public class ApartmentController : ControllerBase
@@ -102,4 +103,5 @@ namespace OdaMeClone.Controllers
             return _context.Apartments.Any(e => e.Id == id);
             }
         }
+        */
     }

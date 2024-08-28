@@ -1,11 +1,13 @@
+using System;
+using OdaMeClone.Models;
+
 namespace OdaMeClone.Dtos.Projects
+{
+    public class PackageDTO
     {
-    public class PaymentDto
-        {
-        public int Id { get; set; }
-        public decimal Amount { get; set; }
-        public DateTime Date { get; set; }
-        public string Method { get; set; }
-        public int InvoiceId { get; set; }
-        }
+        public Guid PackageId { get; set; }
+        public string PackageName { get; set; }
+        public PackageType PackageType { get; set; }
+        public decimal Price { get; set; }
     }
+}

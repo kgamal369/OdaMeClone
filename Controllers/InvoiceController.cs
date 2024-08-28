@@ -1,101 +1,98 @@
+using System;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using OdaMeClone.Data;
-using OdaMeClone.Models;
+using OdaMeClone.Dtos.Projects;
+using OdaMeClone.Services;
 
 namespace OdaMeClone.Controllers
-    {
+{
     [Route("api/[controller]")]
     [ApiController]
     public class InvoiceController : ControllerBase
+    {
+        private readonly InvoiceService _invoiceService;
+
+        public InvoiceController(InvoiceService invoiceService)
         {
-        private readonly OdaDbContext _context;
+            _invoiceService = invoiceService;
+        }
 
-        public InvoiceController(OdaDbContext context)
-            {
-            _context = context;
-            }
-
-        // GET: api/Invoice
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Invoice>>> GetInvoices()
-            {
-            return await _context.Invoices.Include(i => i.Payments).Include(i => i.Apartment).ToListAsync();
-            }
+        public IActionResult GetAllInvoices()
+        {
+            var invoices = _invoiceService.GetAllInvoices();
+            return Ok(invoices);
+        }
 
-        // GET: api/Invoice/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Invoice>> GetInvoice(int id)
-            {
-            var invoice = await _context.Invoices.Include(i => i.Payments).Include(i => i.Apartment).FirstOrDefaultAsync(i => i.Id == id);
-
-            if (invoice == null)
-                {
-                return NotFound();
-                }
-
-            return invoice;
-            }
-
-        // PUT: api/Invoice/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutInvoice(int id, Invoice invoice)
-            {
-            if (id != invoice.Id)
-                {
-                return BadRequest();
-                }
-
-            _context.Entry(invoice).State = EntityState.Modified;
-
+        public IActionResult GetInvoiceById(Guid id)
+        {
             try
-                {
-                await _context.SaveChangesAsync();
-                }
-            catch (DbUpdateConcurrencyException)
-                {
-                if (!InvoiceExists(id))
-                    {
-                    return NotFound();
-                    }
-                else
-                    {
-                    throw;
-                    }
-                }
-
-            return NoContent();
+            {
+                var invoice = _invoiceService.GetInvoiceById(id);
+                return Ok(invoice);
             }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
 
-        // POST: api/Invoice
         [HttpPost]
-        public async Task<ActionResult<Invoice>> PostInvoice(Invoice invoice)
+        public IActionResult AddInvoice([FromBody] InvoiceDTO invoiceDTO)
+        {
+            if (invoiceDTO == null)
             {
-            _context.Invoices.Add(invoice);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetInvoice", new { id = invoice.Id }, invoice);
+                return BadRequest("Invalid invoice data.");
             }
 
-        // DELETE: api/Invoice/5
+            _invoiceService.AddInvoice(invoiceDTO);
+            return CreatedAtAction(nameof(GetInvoiceById), new { id = invoiceDTO.InvoiceId }, invoiceDTO);
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateInvoice(Guid id, [FromBody] InvoiceDTO invoiceDTO)
+        {
+            try
+            {
+                _invoiceService.UpdateInvoice(id, invoiceDTO);
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteInvoice(int id)
+        public IActionResult DeleteInvoice(Guid id)
+        {
+            try
             {
-            var invoice = await _context.Invoices.FindAsync(id);
-            if (invoice == null)
-                {
-                return NotFound();
-                }
-
-            _context.Invoices.Remove(invoice);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+                _invoiceService.DeleteInvoice(id);
+                return NoContent();
             }
-
-        private bool InvoiceExists(int id)
+            catch (KeyNotFoundException ex)
             {
-            return _context.Invoices.Any(e => e.Id == id);
+                return NotFound(ex.Message);
+            }
+        }
+
+        [HttpPost("{id}/applypayment")]
+        public IActionResult ApplyPayment(Guid id, [FromBody] decimal amountPaid)
+        {
+            try
+            {
+                _invoiceService.ApplyPayment(id, amountPaid);
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
     }
+}

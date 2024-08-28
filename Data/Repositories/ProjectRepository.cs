@@ -1,13 +1,60 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using OdaMeClone.Data;
 using OdaMeClone.Models;
 
-namespace OdaMeClone.Data.Repositories
+namespace OdaMeClone.Repositories
+{
+    public interface IProjectRepository
     {
-    public class ProjectRepository : GenericRepository<Project>
-        {
-        public ProjectRepository(OdaDbContext context) : base(context)
-            {
-            }
+        IEnumerable<Project> GetAll();
+        Project GetById(Guid id);
+        void Add(Project project);
+        void Update(Project project);
+        void Delete(Project project);
+    }
 
-        // Add any Project-specific methods here
+    public class ProjectRepository : IProjectRepository
+    {
+        private readonly OdaDbContext _context;
+
+        public ProjectRepository(OdaDbContext context)
+        {
+            _context = context;
+        }
+
+        public IEnumerable<Project> GetAll()
+        {
+            return _context.Projects
+                .Include(p => p.Apartments)
+                .ToList();
+        }
+
+        public Project GetById(Guid id)
+        {
+            return _context.Projects
+                .Include(p => p.Apartments)
+                .FirstOrDefault(p => p.ProjectId == id);
+        }
+
+        public void Add(Project project)
+        {
+            _context.Projects.Add(project);
+            _context.SaveChanges();
+        }
+
+        public void Update(Project project)
+        {
+            _context.Projects.Update(project);
+            _context.SaveChanges();
+        }
+
+        public void Delete(Project project)
+        {
+            _context.Projects.Remove(project);
+            _context.SaveChanges();
         }
     }
+}

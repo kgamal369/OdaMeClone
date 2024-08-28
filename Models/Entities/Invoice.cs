@@ -1,68 +1,78 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
+using OdaMeClone.Data;
 
 namespace OdaMeClone.Models
-    {
-    public enum InvoiceStatus
-        {
-        Paid,
-        Unpaid,
-        PartiallyPaid
-        }
-
+{
     public class Invoice
-        {
+    {
         [Key]
-        public int Id { get; set; }
+        public Guid InvoiceId { get; set; } // Primary Key
 
         [Required]
-        public int CustomerId { get; set; }
-        [ForeignKey("CustomerId")]
-        public required Customer Customer { get; set; }
+        [ForeignKey("Customer")]
+        public Guid CustomerId { get; set; } // Foreign Key to Customer
+
+        public virtual Customer Customer { get; set; } // Navigation Property
 
         [Required]
-        public DateTime InvoiceDate { get; set; }
+        [ForeignKey("Apartment")]
+        public Guid ApartmentId { get; set; } // Foreign Key to Apartment
+
+        public virtual Apartment Apartment { get; set; } // Navigation Property
 
         [Required]
-        public double TotalAmount { get; set; }
+        [ForeignKey("Booking")]
+        public Guid BookingId { get; set; } // Foreign Key to Booking
 
-        public ICollection<Payment> Payments { get; set; } = new List<Payment>();
-
-        [Required]
-        public int ApartmentId { get; set; }
-        [ForeignKey("ApartmentId")]
-        public required Apartment Apartment { get; set; }
+        public virtual Booking Booking { get; set; } // Navigation Property
 
         [Required]
-        public InvoiceStatus Status { get; set; } = InvoiceStatus.Unpaid;
+        [Column(TypeName = "decimal(18,2)")]
+        [Range(0, 100000000, ErrorMessage = "Amount must be a positive value.")]
+        public decimal Amount { get; set; } // Invoice amount
+        [Required]
+        public PaymentMethod PaymentMethod { get; set; } // Enum for payment method
 
-        public double AmountDue()
+        [Required]
+        public DateTime CreatedDateTime { get; set; } // Date and time the invoice was created
+
+        [Required]
+        public InvoiceStatus Status { get; set; } // Enum for invoice status
+
+        [Required]
+        public DateTime DueDate { get; set; } // Payment due date
+
+        public DateTime? PaymentDate { get; set; } // Nullable, date of payment
+
+        [Required]
+        public PaymentStatus PaymentStatus { get; set; } // Enum for payment status
+
+        // Method to apply a payment and update the invoice status
+        public void ApplyPayment(OdaDbContext context, decimal amountPaid)
+        {
+            if (amountPaid <= 0)
             {
-            double paidAmount = Payments.Sum(p => p.Amount);
-            double dueAmount = TotalAmount - paidAmount;
+                throw new ArgumentException("Payment amount must be greater than zero.");
+            }
 
-            if (dueAmount <= 0)
-                {
-                Status = InvoiceStatus.Paid;
-                }
-            else if (paidAmount > 0 && paidAmount < TotalAmount)
-                {
-                Status = InvoiceStatus.PartiallyPaid;
-                }
+            Amount -= amountPaid;
+
+            if (Amount <= 0)
+            {
+                Amount = 0; // Ensure amount does not go negative
+                PaymentStatus = PaymentStatus.Paid;
+                PaymentDate = DateTime.Now;
+            }
             else
-                {
-                Status = InvoiceStatus.Unpaid;
-                }
-
-            return dueAmount;
-            }
-        public void ApplyPayment(Payment payment)
             {
-            Payments.Add(payment);
-            AmountDue(); // Recalculate the due amount and update status
+                PaymentStatus = PaymentStatus.PartiallyPaid;
             }
+
+            context.SaveChanges();
         }
     }
+
+
+}

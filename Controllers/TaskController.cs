@@ -4,7 +4,7 @@ using OdaMeClone.Data;
 using OdaMeClone.Models;
 
 namespace OdaMeClone.Controllers
-    {
+    {/*
     [Route("api/[controller]")]
     [ApiController]
     public class TaskController : ControllerBase
@@ -104,4 +104,5 @@ namespace OdaMeClone.Controllers
             return _context.Tasks.Any(e => e.Id == id);
             }
         }
+        */
     }

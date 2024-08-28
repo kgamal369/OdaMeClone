@@ -1,11 +1,16 @@
+using System;
+using System.Collections.Generic;
+
 namespace OdaMeClone.Dtos.Projects
+{
+
+    public class CustomerDTO
     {
-    public class CustomerDto
-        {
-        public int Id { get; set; }
+        public Guid CustomerId { get; set; }
         public string Name { get; set; }
-        public string ContactDetails { get; set; }
-        public List<ApartmentDto> Apartments { get; set; }
-        public List<InvoiceDto> Invoices { get; set; }
-        }
+        public string Email { get; set; }
+        public string ContactNumber { get; set; }
+        public List<Guid> LinkedApartmentIds { get; set; } // To store associated apartment IDs
+        public List<Guid> LinkedInvoiceIds { get; set; } // To store associated invoice IDs
     }
+}

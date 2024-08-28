@@ -4,7 +4,7 @@ using OdaMeClone.Data;
 using OdaMeClone.Models;
 
 namespace OdaMeClone.Controllers
-    {
+    {/*
     [Route("api/[controller]")]
     [ApiController]
     public class PaymentController : ControllerBase
@@ -98,4 +98,5 @@ namespace OdaMeClone.Controllers
             return _context.Payments.Any(e => e.Id == id);
             }
         }
+        */
     }

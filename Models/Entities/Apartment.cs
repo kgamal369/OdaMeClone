@@ -1,79 +1,131 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
 namespace OdaMeClone.Models
-    {
-    public enum ApartmentStatus
-        {
-        Occupied,
-        OpenForSale,
-        OpenForResale,
-        UnderConstruction,
-        NotYetUnderConstruction,
-        Planning
-        }
-
-    public class LocationFactors
-        {
-        public string View { get; set; } // E.g., "Sea View", "City View"
-        public string Neighborhood { get; set; } // E.g., "Downtown", "Suburbs"
-        public decimal ProximityToAmenities { get; set; } // Changed to decimal
-        public decimal LocationAdjustmentFactor { get; set; } // Changed to decimal
-
-        public decimal CalculateLocationValueAdjustment()
-            {
-            // Implement logic to adjust apartment price based on location factors
-            return LocationAdjustmentFactor * (ProximityToAmenities > 1 ? 1.1M : 1M); // Example logic
-            }
-        }
-
+{
     public class Apartment
-        {
+    {
         [Key]
-        public int Id { get; set; }
+        public Guid ApartmentId { get; set; } // Primary Key
 
         [Required]
+        [StringLength(100, MinimumLength = 2, ErrorMessage = "Apartment Name must be between 2 and 100 characters.")]
+        public string ApartmentName { get; set; } // Name of the apartment
+
+        [Required]
+        public ApartmentType ApartmentType { get; set; } // Enum for Apartment Type
+
+        [Required]
+        [Range(10, 10000, ErrorMessage = "Space must be between 10 and 10,000 square meters.")]
         public double Space { get; set; } // Space in square meters
 
+        [StringLength(1000, ErrorMessage = "Description can't be longer than 1000 characters.")]
+        public string Description { get; set; } // Description of the apartment
+
+        public List<byte[]> ApartmentPhotos { get; set; } // List of photos of the apartment
+
+        public virtual ICollection<Package> PackagesList { get; set; } // List of associated packages
+
+        public virtual ICollection<AddOn> AddonsList { get; set; } // List of associated addons
+
+        // Conditional attributes
+        [ForeignKey("Customer")]
+        public Guid? CustomerId { get; set; } // Foreign Key to Customer, nullable if not booked
+        public virtual Customer Customer { get; set; } // Navigation property to Customer
+
+        // Status of the Apartment
         [Required]
-        public ApartmentStatus Status { get; set; }
+        public ApartmentStatus Status { get; set; } // Enum to track apartment status
 
-        public int? CustomerId { get; set; }
-        [ForeignKey("CustomerId")]
-        public Customer Customer { get; set; } // Nullable, as not all apartments are sold
+        // Navigation properties to ensure proper relationship mapping
+        public Guid ProjectId { get; set; }  // Foreign Key to Project
+        public virtual Project Project { get; set; } // Navigation property to Project
 
-        [Required]
-        public int ProjectId { get; set; }
-        [ForeignKey("ProjectId")]
-        public Project Project { get; set; }
+        [ForeignKey("AssignedPackage")]
+        public Guid? AssignedPackageId { get; set; } // Foreign Key to Assigned Package
+        public virtual Package AssignedPackage { get; set; } // Navigation Property
 
-        public LocationFactors LocationFactors { get; set; } // Added LocationFactors to Apartment
+        public virtual ICollection<AddOn> AssignedAddons { get; set; } // List of selected addons (Optional)
 
-        public ICollection<Feature> Features { get; set; } = new List<Feature>();
+        // Calculated field for total price
+        [NotMapped]
+        public decimal? TotalPrice => CalculateTotalPrice();
 
-        public ICollection<Task> Tasks { get; set; } = new List<Task>();
+        // Additional fields for more detailed apartment attributes
+        public int FloorNumber { get; set; } // Floor number of the apartment
+        public string ViewType { get; set; } // e.g., Sea View, Garden View
+        public DateTime? AvailabilityDate { get; set; } // Date when the apartment becomes available
 
-        public ICollection<Invoice> Invoices { get; set; } = new List<Invoice>();
+        // Constructor initializing collections
+        public Apartment()
+        {
+            ApartmentPhotos = new List<byte[]>();
+            PackagesList = new List<Package>();
+            AddonsList = new List<AddOn>();
+            AssignedAddons = new List<AddOn>();
+        }
 
-        private decimal CalculateTotalPrice()
+        // Method to add a package
+        public void AddPackage(Package package)
+        {
+            if (PackagesList == null)
+                PackagesList = new List<Package>();
+
+            PackagesList.Add(package);
+        }
+
+        // Method to remove a package
+        public void RemovePackage(Package package)
+        {
+            PackagesList?.Remove(package);
+        }
+
+        // Method to calculate the total price
+        public decimal CalculateTotalPrice()
+        {
+            // Apply discounts, taxes, or other adjustments here if needed
+            return (AssignedPackage?.Price ?? 0) + (AssignedAddons?.Sum(a => a.PricePerUnit * a.InstalledUnits) ?? 0);
+        }
+
+        // Method to validate addon selections
+        public bool ValidateAddons()
+        {
+            foreach (var addon in AssignedAddons)
             {
-            decimal featureCost = Features.Sum(f => (decimal)f.Cost); // Assuming Feature.Cost is of type double
-            decimal invoiceTotal = (decimal)Invoices.Where(i => i.Status == InvoiceStatus.Paid).Sum(i => i.TotalAmount);  // Assuming Invoice.TotalAmount is of type decimal
-            decimal locationAdjustment = LocationFactors?.CalculateLocationValueAdjustment() ?? 1M; // Adjust based on LocationFactors
+                if (addon.InstalledUnits > addon.MaxUnits)
+                {
+                    throw new InvalidOperationException($"Addon {addon.AddOnName} exceeds the maximum allowed units.");
+                }
+            }
+            return true;
+        }
 
-            decimal basePrice = featureCost + invoiceTotal;
-            return basePrice * (decimal)Space * locationAdjustment; // Convert Space to decimal and apply location adjustment
+        // Method to propagate price updates throughout the system
+        public void UpdatePrices(decimal newPackagePrice, Dictionary<Guid, decimal> addonPrices)
+        {
+            if (AssignedPackage != null)
+            {
+                AssignedPackage.Price = newPackagePrice;
             }
 
-        public void ApplyPayment(Payment payment)
+            if (AssignedAddons != null)
             {
-            var invoice = Invoices.FirstOrDefault(i => i.Id == payment.InvoiceId);
-            if (invoice != null && invoice.Status != InvoiceStatus.Paid)
+                foreach (var addon in AssignedAddons)
                 {
-                invoice.ApplyPayment(payment);
+                    if (addonPrices.ContainsKey(addon.AddOnId))
+                    {
+                        addon.PricePerUnit = addonPrices[addon.AddOnId];
+                    }
                 }
             }
         }
     }
+
+
+
+
+}
+

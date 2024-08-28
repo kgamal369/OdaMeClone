@@ -2,16 +2,19 @@ using OdaMeClone.Models;
 
 namespace OdaMeClone.Dtos.Projects
     {
-    public class ApartmentDto
-        {
-        public int Id { get; set; }
+     public class ApartmentDTO
+    {
+        public Guid ApartmentId { get; set; }
+        public string ApartmentName { get; set; }
+        public ApartmentType ApartmentType { get; set; }
         public double Space { get; set; }
-        public List<FeatureDto> Features { get; set; }
-        public string Status { get; set; }
-        //        public LocationFactorsDto LocationFactors { get; set; }
-        public decimal Price { get; set; }
-        public int CustomerId { get; set; }
-        public List<TaskDto> Tasks { get; set; }
-        public List<InvoiceDto> Invoices { get; set; }
-        }
+        public string Description { get; set; }
+        public List<byte[]> ApartmentPhotos { get; set; }
+        public int FloorNumber { get; set; }
+        public string ViewType { get; set; }
+        public DateTime? AvailabilityDate { get; set; }
+        public decimal? TotalPrice { get; set; }
+
+        public Guid ProjectId { get; set; } // Assuming you want to show the project it belongs to
+    }
     }

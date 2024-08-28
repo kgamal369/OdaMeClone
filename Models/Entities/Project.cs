@@ -1,46 +1,59 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OdaMeClone.Models
-    {
+{
     public class Project
-        {
+    {
         [Key]
-        public int Id { get; set; }
+        public Guid ProjectId { get; set; } // Primary Key
 
         [Required]
-        public string Name { get; set; }
+        [StringLength(100)]
+        public string ProjectName { get; set; } // Name of the project
 
         [Required]
-        public string Description { get; set; }
+        [StringLength(200)]
+        public string Location { get; set; } // Location of the project
+
+        [StringLength(1000)]
+        public string Amenities { get; set; } // Description of common amenities
 
         [Required]
-        public string Location { get; set; } // Location influences price
+        public int TotalUnits { get; set; } // Total number of apartments in the project
 
-        public ICollection<Apartment> Apartments { get; set; } = new List<Apartment>();
+        public byte[] ProjectLogo { get; set; } // Project logo or photo
 
-        public ICollection<Resource> Resources { get; set; } = new List<Resource>();
+        public virtual ICollection<Apartment> Apartments { get; set; } // List of associated apartments
 
-        public ICollection<Task> Tasks { get; set; } = new List<Task>();  // Add this line to include the Tasks collection
+        public Project()
+        {
+            Apartments = new List<Apartment>();
+        }
 
-        public double LocationFactor { get; set; } // A dynamic multiplier for location
-
-        public double CalculateLocationMultiplier()
+        // Method to add an apartment to the project
+        public void AddApartment(Apartment apartment)
+        {
+            if (Apartments == null)
             {
-            // Example logic for calculating a location multiplier based on the Location string
-            switch (Location.ToLower())
-                {
-                case "prime location":
-                    return 1.5;
-                case "good view":
-                    return 1.2;
-                default:
-                    return 1.0;
-                }
+                Apartments = new List<Apartment>();
             }
 
-        [Required]
-        public string Creator { get; set; } // Assuming Creator is a string representing the name of the person who created the project
+            Apartments.Add(apartment);
+        }
+
+        // Method to remove an apartment from the project
+        public void RemoveApartment(Apartment apartment)
+        {
+            Apartments?.Remove(apartment);
+        }
+
+        // Method to get a summary of the project
+        public string GetProjectSummary()
+        {
+            return $"{ProjectName} located at {Location} with {TotalUnits} total units.";
         }
     }
+}

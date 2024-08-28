@@ -2,114 +2,98 @@ using Microsoft.EntityFrameworkCore;
 using OdaMeClone.Models;
 
 namespace OdaMeClone.Data
-    {
+{
     public class OdaDbContext : DbContext
+    {
+        public OdaDbContext(DbContextOptions<OdaDbContext> options)
+            : base(options)
         {
-        public OdaDbContext(DbContextOptions<OdaDbContext> options) : base(options) { }
+        }
 
+        // DbSet properties representing each entity in the domain model
+        public DbSet<Customer> Customers { get; set; }
+        public DbSet<Apartment> Apartments { get; set; }
+        public DbSet<Booking> Bookings { get; set; }
+        public DbSet<Invoice> Invoices { get; set; }
+        public DbSet<Package> Packages { get; set; }
+        public DbSet<AddOn> AddOns { get; set; }
+        public DbSet<Payment> Payments { get; set; }
+        public DbSet<Project> Projects { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
-        public DbSet<Project> Projects { get; set; }
-        public DbSet<OdaMeClone.Models.Task> Tasks { get; set; }
-        public DbSet<Resource> Resources { get; set; }
-        public DbSet<Invoice> Invoices { get; set; }
-        public DbSet<Payment> Payments { get; set; }
-        public DbSet<Apartment> Apartments { get; set; }
-        public DbSet<Feature> Features { get; set; }
-        public DbSet<Customer> Customers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
-            {
-            // User-Role Relationship
-            modelBuilder.Entity<User>()
-                .HasKey(u => u.Id);
+        {
+            base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Role>()
-                .HasKey(r => r.Id);
+            // Fluent API configuration for relationships and constraints
 
-            // Project-Creator Relationship
-            modelBuilder.Entity<Project>()
-                .HasKey(p => p.Id);
-
-            modelBuilder.Entity<Project>()
-                .HasOne<User>()
-                .WithMany()
-                .HasForeignKey(p => p.Creator)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            // Task-Project Relationship
-            modelBuilder.Entity<OdaMeClone.Models.Task>()
-                .HasKey(t => t.Id);
-
-            modelBuilder.Entity<OdaMeClone.Models.Task>()
-                .HasOne(t => t.Project)
-                .WithMany(p => p.Tasks)
-                .HasForeignKey(t => t.ProjectId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            // Task-Assignee Relationship
-            modelBuilder.Entity<OdaMeClone.Models.Task>()
-                .HasOne<User>()
-                .WithMany()
-                .HasForeignKey(t => t.Assignee)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            // Resource-Project Relationship
-            modelBuilder.Entity<Resource>()
-                .HasKey(r => r.Id);
-
-            modelBuilder.Entity<Resource>()
-                .HasOne(r => r.Project)
-                .WithMany(p => p.Resources)
-                .HasForeignKey(r => r.ProjectId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            // Invoice-Apartment Relationship
-            modelBuilder.Entity<Invoice>()
-                .HasKey(i => i.Id);
-
-            modelBuilder.Entity<Invoice>()
-                .HasOne(i => i.Apartment)
-                .WithMany(a => a.Invoices)
-                .HasForeignKey(i => i.ApartmentId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            // Payment-Invoice Relationship
-            modelBuilder.Entity<Payment>()
-                .HasKey(p => p.Id);
-
-            modelBuilder.Entity<Payment>()
-                .HasOne(p => p.Invoice)
-                .WithMany(i => i.Payments)
-                .HasForeignKey(p => p.InvoiceId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            // Apartment-Project Relationship
-            modelBuilder.Entity<Apartment>()
-                .HasKey(a => a.Id);
-
-            modelBuilder.Entity<Apartment>()
-                .HasOne(a => a.Project)
-                .WithMany(p => p.Apartments)
-                .HasForeignKey(a => a.ProjectId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            // Apartment-Customer Relationship
-            modelBuilder.Entity<Apartment>()
-                .HasOne(a => a.Customer)
-                .WithMany(c => c.Apartments)
+            // Customer - Apartment relationship (One-to-Many)
+            modelBuilder.Entity<Customer>()
+                .HasMany(c => c.LinkedApartments)
+                .WithOne(a => a.Customer)
                 .HasForeignKey(a => a.CustomerId)
                 .OnDelete(DeleteBehavior.SetNull);
 
-            // Feature-Apartment Relationship
-            modelBuilder.Entity<Feature>()
-                .HasKey(f => f.Id);
-
-            modelBuilder.Entity<Feature>()
-                .HasOne(f => f.Apartment)
-                .WithMany(a => a.Features)
-                .HasForeignKey(f => f.ApartmentId)
+            // Customer - Invoice relationship (One-to-Many)
+            modelBuilder.Entity<Customer>()
+                .HasMany(c => c.LinkedInvoices)
+                .WithOne(i => i.Customer)
+                .HasForeignKey(i => i.CustomerId)
                 .OnDelete(DeleteBehavior.Cascade);
-            }
+
+            // Project - Apartment relationship (One-to-Many)
+            modelBuilder.Entity<Project>()
+                .HasMany(p => p.Apartments)
+                .WithOne(a => a.Project)
+                .HasForeignKey(a => a.ProjectId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Booking - Apartment relationship (One-to-One)
+            modelBuilder.Entity<Booking>()
+                .HasOne(b => b.Apartment)
+                .WithMany() // Assuming Apartment does not have a direct reference to Booking
+                .HasForeignKey(b => b.ApartmentId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Invoice - Payment relationship (One-to-Many)
+            modelBuilder.Entity<Payment>()
+                .HasOne(p => p.Invoice)
+                .WithMany() // Assuming Invoice does not have a direct reference to Payments
+                .HasForeignKey(p => p.InvoiceId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Package - Apartment relationship (One-to-Many)
+            modelBuilder.Entity<Package>()
+                .HasMany<Apartment>() // Assuming Package does not have a direct reference to Apartments
+                .WithOne(a => a.AssignedPackage)
+                .HasForeignKey(a => a.AssignedPackageId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            // AddOn - Apartment relationship (Many-to-Many)
+            modelBuilder.Entity<Apartment>()
+                .HasMany(a => a.AssignedAddons)
+                .WithOne()
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Ensure decimal precision for monetary values
+            modelBuilder.Entity<Invoice>()
+                .Property(i => i.Amount)
+                .HasColumnType("decimal(18,2)");
+
+            modelBuilder.Entity<Payment>()
+                .Property(p => p.AmountPaid)
+                .HasColumnType("decimal(18,2)");
+
+            modelBuilder.Entity<Package>()
+                .Property(p => p.Price)
+                .HasColumnType("decimal(18,2)");
+
+            modelBuilder.Entity<AddOn>()
+                .Property(a => a.PricePerUnit)
+                .HasColumnType("decimal(18,2)");
+
+            // Additional configurations can be added as needed
         }
     }
+}
