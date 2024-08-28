@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("OdaMeClone")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1b9ba23cd30601387d3dfa18ff5060d7f396bc4a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5f29a36df77455441ce98438c97f0ef2a3becdda")]
 [assembly: System.Reflection.AssemblyProductAttribute("OdaMeClone")]
 [assembly: System.Reflection.AssemblyTitleAttribute("OdaMeClone")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

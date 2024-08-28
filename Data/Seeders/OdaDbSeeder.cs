@@ -1,45 +1,49 @@
 using System.Linq;
-using System.Threading.Tasks;  // Fully qualify Task for asynchronous methods
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using OdaMeClone.Models;
 using OdaMeClone.Services;
 
 namespace OdaMeClone.Data.Seeders
+{
+    public class OdaDbSeeder
     {
-    public static class OdaDbSeeder
+        private readonly OdaDbContext _context;
+        private readonly IPasswordHasher _passwordHasher;
+
+        public OdaDbSeeder(OdaDbContext context, IPasswordHasher passwordHasher)
         {
-        public static async System.Threading.Tasks.Task SeedAsync(IServiceProvider serviceProvider)  // Fully qualify Task here
+            _context = context;
+            _passwordHasher = passwordHasher;
+        }
+
+        public async Task Seed()
+        {
+            if (!_context.Roles.Any())
             {
-            using (var scope = serviceProvider.CreateScope())
-                {
-                var context = scope.ServiceProvider.GetRequiredService<OdaDbContext>();
+                _context.Roles.AddRange(
+                    new Role { Name = "Admin", Description = "Administrator" },
+                    new Role { Name = "User", Description = "Regular User" }
+                );
 
-                if (!context.Roles.Any())
-                    {
-                    context.Roles.AddRange(
-                        new Role { Name = "Admin", Description = "Administrator" },
-                        new Role { Name = "User", Description = "Regular User" }
-                    );
-
-                    await context.SaveChangesAsync();
-                    }
-
-                if (!context.Users.Any())
-                    {
-                    var passwordHasher = scope.ServiceProvider.GetRequiredService<IPasswordHasher>();
-
-                    context.Users.Add(new User
-                        {
-                        Username = "admin",
-                        Email = "admin@odameclone.com",
-                        PasswordHash = passwordHasher.HashPassword("Admin@123"),
-                        RoleId = context.Roles.First(r => r.Name == "Admin").Id,
-                        EmailConfirmed = true
-                        });
-
-                    await context.SaveChangesAsync();
-                    }
-                }
+                await _context.SaveChangesAsync();
             }
+
+            if (!_context.Users.Any())
+            {
+                _context.Users.Add(new User
+                {
+                    Username = "admin",
+                    Email = "admin@odameclone.com",
+                    PasswordHash = _passwordHasher.HashPassword("Admin@123"),
+                    RoleId = _context.Roles.First(r => r.Name == "Admin").Id,
+                    EmailConfirmed = true
+                });
+
+                await _context.SaveChangesAsync();
+            }
+
+            // Add any additional seeding logic here
         }
     }
+}
