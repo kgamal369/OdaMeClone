@@ -3,11 +3,13 @@ using OdaMeClone.Models;
 
 namespace OdaMeClone.Dtos.Projects
 {
-    public class PackageDTO
+    public class PaymentDTO
     {
-        public Guid PackageId { get; set; }
-        public string PackageName { get; set; }
-        public PackageType PackageType { get; set; }
-        public decimal Price { get; set; }
+        public Guid PaymentId { get; set; }
+        public Guid CustomerId { get; set; }
+        public Guid InvoiceId { get; set; }
+        public decimal AmountPaid { get; set; }
+        public DateTime PaymentDate { get; set; }
+        public PaymentMethod PaymentMethod { get; set; }
     }
 }

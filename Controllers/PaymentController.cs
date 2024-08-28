@@ -1,102 +1,80 @@
+using System;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using OdaMeClone.Data;
-using OdaMeClone.Models;
+using OdaMeClone.Dtos.Projects;
+using OdaMeClone.Services;
 
 namespace OdaMeClone.Controllers
-    {/*
+{
     [Route("api/[controller]")]
     [ApiController]
     public class PaymentController : ControllerBase
+    {
+        private readonly PaymentService _paymentService;
+
+        public PaymentController(PaymentService paymentService)
         {
-        private readonly OdaDbContext _context;
+            _paymentService = paymentService;
+        }
 
-        public PaymentController(OdaDbContext context)
-            {
-            _context = context;
-            }
-
-        // GET: api/Payment
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Payment>>> GetPayments()
-            {
-            return await _context.Payments.Include(p => p.Invoice).ToListAsync();
-            }
+        public IActionResult GetAllPayments()
+        {
+            var payments = _paymentService.GetAllPayments();
+            return Ok(payments);
+        }
 
-        // GET: api/Payment/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Payment>> GetPayment(int id)
-            {
-            var payment = await _context.Payments.Include(p => p.Invoice).FirstOrDefaultAsync(p => p.Id == id);
-
-            if (payment == null)
-                {
-                return NotFound();
-                }
-
-            return payment;
-            }
-
-        // PUT: api/Payment/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutPayment(int id, Payment payment)
-            {
-            if (id != payment.Id)
-                {
-                return BadRequest();
-                }
-
-            _context.Entry(payment).State = EntityState.Modified;
-
+        public IActionResult GetPaymentById(Guid id)
+        {
             try
-                {
-                await _context.SaveChangesAsync();
-                }
-            catch (DbUpdateConcurrencyException)
-                {
-                if (!PaymentExists(id))
-                    {
-                    return NotFound();
-                    }
-                else
-                    {
-                    throw;
-                    }
-                }
-
-            return NoContent();
-            }
-
-        // POST: api/Payment
-        [HttpPost]
-        public async Task<ActionResult<Payment>> PostPayment(Payment payment)
             {
-            _context.Payments.Add(payment);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetPayment", new { id = payment.Id }, payment);
+                var payment = _paymentService.GetPaymentById(id);
+                return Ok(payment);
             }
-
-        // DELETE: api/Payment/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePayment(int id)
+            catch (KeyNotFoundException ex)
             {
-            var payment = await _context.Payments.FindAsync(id);
-            if (payment == null)
-                {
-                return NotFound();
-                }
-
-            _context.Payments.Remove(payment);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-            }
-
-        private bool PaymentExists(int id)
-            {
-            return _context.Payments.Any(e => e.Id == id);
+                return NotFound(ex.Message);
             }
         }
-        */
+
+        [HttpPost]
+        public IActionResult AddPayment([FromBody] PaymentDTO paymentDTO)
+        {
+            if (paymentDTO == null)
+            {
+                return BadRequest("Invalid payment data.");
+            }
+
+            _paymentService.AddPayment(paymentDTO);
+            return CreatedAtAction(nameof(GetPaymentById), new { id = paymentDTO.PaymentId }, paymentDTO);
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdatePayment(Guid id, [FromBody] PaymentDTO paymentDTO)
+        {
+            try
+            {
+                _paymentService.UpdatePayment(id, paymentDTO);
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeletePayment(Guid id)
+        {
+            try
+            {
+                _paymentService.DeletePayment(id);
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
     }
+}

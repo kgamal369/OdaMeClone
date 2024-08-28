@@ -4,7 +4,7 @@ using System.Linq;
 using OdaMeClone.Data;
 using OdaMeClone.Models;
 using OdaMeClone.Dtos.Projects;
-using OdaMeClone.Repositories;
+using OdaMeClone.Data.Repositories;
 
 namespace OdaMeClone.Services
 {

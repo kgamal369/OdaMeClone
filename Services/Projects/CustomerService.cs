@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using OdaMeClone.Models;
 using OdaMeClone.Dtos.Projects;
-using OdaMeClone.Repositories;
+using OdaMeClone.Data.Repositories;
 
 namespace OdaMeClone.Services
 {

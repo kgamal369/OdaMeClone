@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using OdaMeClone.Data;
 using OdaMeClone.Models;
 
-namespace OdaMeClone.Repositories
+namespace OdaMeClone.Data.Repositories
 {
     public interface IInvoiceRepository
     {
