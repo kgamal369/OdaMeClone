@@ -1,9 +1,9 @@
 using System;
 
 namespace OdaMeClone.Models.ViewModels
-{
-    public class UserViewModel
     {
+    public class UserViewModel
+        {
         public int Id { get; set; }
         public string Username { get; set; }
         public string Email { get; set; }
@@ -17,5 +17,5 @@ namespace OdaMeClone.Models.ViewModels
         public bool TwoFactorEnabled { get; set; }
 
         public string DisplayName => $"{Username} ({RoleName})";
+        }
     }
-}

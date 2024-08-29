@@ -35,8 +35,6 @@ namespace OdaMeClone.Models
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
         public ICollection<Project> Projects { get; set; } = new List<Project>();
-        public ICollection<Task> Tasks { get; set; } = new List<Task>();
-
         // Optional: Two-Factor Authentication (2FA)
         public bool TwoFactorEnabled { get; set; } = false;
         public string? TwoFactorCode { get; set; }

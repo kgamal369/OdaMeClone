@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 
 namespace OdaMeClone.Models.ViewModels
-{
-    public class ProjectViewModel
     {
+    public class ProjectViewModel
+        {
         public Guid ProjectId { get; set; }
         public string ProjectName { get; set; }
         public string Location { get; set; }
@@ -14,5 +14,5 @@ namespace OdaMeClone.Models.ViewModels
         public List<string> ApartmentNames { get; set; } // Display names of associated apartments
 
         public string ProjectSummary => $"{ProjectName} located at {Location} with {TotalUnits} total units.";
+        }
     }
-}

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using OdaMeClone.Models;
 
 namespace OdaMeClone.Dtos.Projects
-{
-    public class BookingDTO
     {
+    public class BookingDTO
+        {
         public Guid BookingId { get; set; }
         public Guid CustomerId { get; set; }
         public Guid ApartmentId { get; set; }
@@ -17,5 +17,5 @@ namespace OdaMeClone.Dtos.Projects
         public decimal TotalAmount { get; set; }
         public PaymentMethod PaymentMethod { get; set; }
         public List<InvoiceDTO> Invoices { get; set; }
+        }
     }
-}

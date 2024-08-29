@@ -5,9 +5,9 @@ using System.Linq;
 using OdaMeClone.Data;
 
 namespace OdaMeClone.Models
-{
-    public class Package
     {
+    public class Package
+        {
         [Key]
         public Guid PackageId { get; set; } // Primary Key
 
@@ -25,7 +25,7 @@ namespace OdaMeClone.Models
 
         // Method to update package price and cascade the change
         public void UpdatePackagePrice(OdaDbContext context, decimal newPrice)
-        {
+            {
             Price = newPrice;
 
             // Fetch all apartments that have this package assigned
@@ -35,13 +35,13 @@ namespace OdaMeClone.Models
 
             // Recalculate total price for each apartment
             foreach (var apartment in apartments)
-            {
+                {
                 apartment.CalculateTotalPrice();
-            }
+                }
 
             // Save changes to the database
             context.SaveChanges();
+            }
         }
-    }
 
-}
+    }

@@ -5,9 +5,9 @@ using System.Linq;
 using OdaMeClone.Data;
 
 namespace OdaMeClone.Models
-{
-    public class AddOn
     {
+    public class AddOn
+        {
         [Key]
         public Guid AddOnId { get; set; } // Primary Key
 
@@ -26,18 +26,19 @@ namespace OdaMeClone.Models
         [Required]
         [Range(1, 100, ErrorMessage = "Max units must be between 1 and 100.")]
         public int MaxUnits { get; set; } // Maximum units allowed for installation
+        public virtual ICollection<ApartmentAddOn> ApartmentAddOns { get; set; }
 
         [Range(0, 100, ErrorMessage = "Installed units must be between 0 and the maximum units allowed.")]
         public int InstalledUnits { get; set; } // Actual installed units
 
         public AddOn()
-        {
-            InstalledUnits = 0;
-        }
+            {
+            ApartmentAddOns = new List<ApartmentAddOn>();
+            }
 
         // Method to update the price of an addon and propagate the change to affected apartments
         public void UpdateAddOnPrice(OdaDbContext context, decimal newPrice)
-        {
+            {
             PricePerUnit = newPrice;
 
             // Fetch all apartments that have this addon assigned
@@ -46,22 +47,22 @@ namespace OdaMeClone.Models
                 .ToList();
 
             foreach (var apartment in apartments)
-            {
+                {
                 apartment.CalculateTotalPrice();
-            }
+                }
 
             context.SaveChanges();
-        }
+            }
 
         // Method to validate the number of installed units
         public void ValidateInstalledUnits()
-        {
-            if (InstalledUnits > MaxUnits)
             {
+            if (InstalledUnits > MaxUnits)
+                {
                 throw new InvalidOperationException($"Installed units for {AddOnName} cannot exceed the maximum limit of {MaxUnits} units.");
+                }
             }
         }
+
+
     }
-
-
-}

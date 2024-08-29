@@ -2,13 +2,13 @@ using Microsoft.EntityFrameworkCore;
 using OdaMeClone.Models;
 
 namespace OdaMeClone.Data
-{
-    public class OdaDbContext : DbContext
     {
+    public class OdaDbContext : DbContext
+        {
         public OdaDbContext(DbContextOptions<OdaDbContext> options)
             : base(options)
-        {
-        }
+            {
+            }
 
         // DbSet properties representing each entity in the domain model
         public DbSet<Customer> Customers { get; set; }
@@ -17,14 +17,17 @@ namespace OdaMeClone.Data
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<Package> Packages { get; set; }
         public DbSet<AddOn> AddOns { get; set; }
+        public DbSet<ApartmentAddOn> ApartmentAddOns { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
+            {
             base.OnModelCreating(modelBuilder);
+            // Set the default schema
+            modelBuilder.HasDefaultSchema("OdaMeClone");
 
             // Fluent API configuration for relationships and constraints
 
@@ -70,11 +73,19 @@ namespace OdaMeClone.Data
                 .HasForeignKey(a => a.AssignedPackageId)
                 .OnDelete(DeleteBehavior.SetNull);
 
-            // AddOn - Apartment relationship (Many-to-Many)
-            modelBuilder.Entity<Apartment>()
-                .HasMany(a => a.AssignedAddons)
-                .WithOne()
-                .OnDelete(DeleteBehavior.Cascade);
+            // Define the many-to-many relationship between Apartment and AddOn
+            modelBuilder.Entity<ApartmentAddOn>()
+                .HasKey(aa => new { aa.ApartmentId, aa.AddOnId });
+
+            modelBuilder.Entity<ApartmentAddOn>()
+                .HasOne(aa => aa.Apartment)
+                .WithMany(a => a.ApartmentAddOns)
+                .HasForeignKey(aa => aa.ApartmentId);
+
+            modelBuilder.Entity<ApartmentAddOn>()
+                .HasOne(aa => aa.AddOn)
+                .WithMany(a => a.ApartmentAddOns)
+                .HasForeignKey(aa => aa.AddOnId);
 
             // Ensure decimal precision for monetary values
             modelBuilder.Entity<Invoice>()
@@ -94,6 +105,6 @@ namespace OdaMeClone.Data
                 .HasColumnType("decimal(18,2)");
 
             // Additional configurations can be added as needed
+            }
         }
     }
-}

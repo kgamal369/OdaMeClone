@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 using OdaMeClone.Data;
 
 namespace OdaMeClone.Models
-{
-    public class Invoice
     {
+    public class Invoice
+        {
         [Key]
         public Guid InvoiceId { get; set; } // Primary Key
 
@@ -51,28 +51,28 @@ namespace OdaMeClone.Models
 
         // Method to apply a payment and update the invoice status
         public void ApplyPayment(OdaDbContext context, decimal amountPaid)
-        {
-            if (amountPaid <= 0)
             {
+            if (amountPaid <= 0)
+                {
                 throw new ArgumentException("Payment amount must be greater than zero.");
-            }
+                }
 
             Amount -= amountPaid;
 
             if (Amount <= 0)
-            {
+                {
                 Amount = 0; // Ensure amount does not go negative
                 PaymentStatus = PaymentStatus.Paid;
                 PaymentDate = DateTime.Now;
-            }
+                }
             else
-            {
+                {
                 PaymentStatus = PaymentStatus.PartiallyPaid;
-            }
+                }
 
             context.SaveChanges();
+            }
         }
+
+
     }
-
-
-}

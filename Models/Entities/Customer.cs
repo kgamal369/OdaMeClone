@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OdaMeClone.Models
-{
-    public class Customer
     {
+    public class Customer
+        {
         [Key]
         public Guid CustomerId { get; set; } // Primary Key
 
@@ -29,47 +29,47 @@ namespace OdaMeClone.Models
         public virtual ICollection<Invoice> LinkedInvoices { get; set; } // List of related invoices
 
         public Customer()
-        {
+            {
             LinkedApartments = new List<Apartment>();
             LinkedInvoices = new List<Invoice>();
-        }
+            }
 
         // Method to add an apartment to the customer's list
         public void AddApartment(Apartment apartment)
-        {
-            if (LinkedApartments == null)
             {
+            if (LinkedApartments == null)
+                {
                 LinkedApartments = new List<Apartment>();
-            }
+                }
             LinkedApartments.Add(apartment);
-        }
+            }
 
         // Method to remove an apartment from the customer's list
         public void RemoveApartment(Apartment apartment)
-        {
+            {
             LinkedApartments?.Remove(apartment);
-        }
+            }
 
         // Method to add an invoice to the customer's list
         public void AddInvoice(Invoice invoice)
-        {
-            if (LinkedInvoices == null)
             {
+            if (LinkedInvoices == null)
+                {
                 LinkedInvoices = new List<Invoice>();
-            }
+                }
             LinkedInvoices.Add(invoice);
-        }
+            }
 
         // Method to remove an invoice from the customer's list
         public void RemoveInvoice(Invoice invoice)
-        {
+            {
             LinkedInvoices?.Remove(invoice);
-        }
+            }
 
         // Method to get a summary of the customer's details
         public string GetCustomerSummary()
-        {
+            {
             return $"Customer: {Name}, Email: {Email}, Contact Number: {ContactNumber}";
+            }
         }
     }
-}

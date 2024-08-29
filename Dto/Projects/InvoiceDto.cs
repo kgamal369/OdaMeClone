@@ -2,9 +2,9 @@ using System;
 using OdaMeClone.Models;
 
 namespace OdaMeClone.Dtos.Projects
-{
-    public class InvoiceDTO
     {
+    public class InvoiceDTO
+        {
         public Guid InvoiceId { get; set; }
         public Guid CustomerId { get; set; }
         public Guid ApartmentId { get; set; }
@@ -16,5 +16,5 @@ namespace OdaMeClone.Dtos.Projects
         public DateTime DueDate { get; set; }
         public DateTime? PaymentDate { get; set; }
         public PaymentStatus PaymentStatus { get; set; }
+        }
     }
-}

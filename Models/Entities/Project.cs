@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OdaMeClone.Models
-{
-    public class Project
     {
+    public class Project
+        {
         [Key]
         public Guid ProjectId { get; set; } // Primary Key
 
@@ -29,31 +29,31 @@ namespace OdaMeClone.Models
         public virtual ICollection<Apartment> Apartments { get; set; } // List of associated apartments
 
         public Project()
-        {
+            {
             Apartments = new List<Apartment>();
-        }
+            }
 
         // Method to add an apartment to the project
         public void AddApartment(Apartment apartment)
-        {
-            if (Apartments == null)
             {
+            if (Apartments == null)
+                {
                 Apartments = new List<Apartment>();
-            }
+                }
 
             Apartments.Add(apartment);
-        }
+            }
 
         // Method to remove an apartment from the project
         public void RemoveApartment(Apartment apartment)
-        {
+            {
             Apartments?.Remove(apartment);
-        }
+            }
 
         // Method to get a summary of the project
         public string GetProjectSummary()
-        {
+            {
             return $"{ProjectName} located at {Location} with {TotalUnits} total units.";
+            }
         }
     }
-}

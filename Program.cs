@@ -26,6 +26,7 @@ builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IApartmentAddOnRepository, ApartmentAddOnRepository>();
 
 builder.Services.AddScoped<AddOnService>();
 builder.Services.AddScoped<ApartmentService>();
@@ -37,6 +38,7 @@ builder.Services.AddScoped<PaymentService>();
 builder.Services.AddScoped<ProjectService>();
 builder.Services.AddScoped<RoleService>();
 builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<ApartmentAddOnService>();
 
 // Register the seeder
 builder.Services.AddScoped<OdaDbSeeder>();
@@ -47,15 +49,15 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(static c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
-    {
+        {
         Version = "v1",
         Title = "OdaMeClone API",
         Description = "API documentation for OdaMeClone"
-    });
+        });
 
     // Add JWT authentication to Swagger
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
+        {
         Description = @"JWT Authorization header using the Bearer scheme. \r\n\r\n
                    Enter 'Bearer' [space] and then your token in the text input below.
                    \r\n\r\nExample: 'Bearer 12345abcdef'",
@@ -63,7 +65,7 @@ builder.Services.AddSwaggerGen(static c =>
         In = ParameterLocation.Header,
         Type = SecuritySchemeType.ApiKey,
         Scheme = "Bearer"
-    });
+        });
 
     c.AddSecurityRequirement(new OpenApiSecurityRequirement()
     {
@@ -104,7 +106,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
-        {
+            {
             ValidateIssuer = true,
             ValidateAudience = true,
             ValidateLifetime = true,
@@ -112,21 +114,21 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
             ValidAudience = builder.Configuration["Jwt:Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
-        };
+            };
     });
 
 var app = builder.Build();
 
 // Apply migrations and seed database
 using (var scope = app.Services.CreateScope())
-{
+    {
     var dbSeeder = scope.ServiceProvider.GetRequiredService<OdaDbSeeder>();
     await dbSeeder.Seed(); // Ensure the Seed method is async
-}
+    }
 
 // Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
-{
+    {
     app.UseDeveloperExceptionPage(); // Detailed error pages in development
     app.UseSwagger();
     app.UseSwaggerUI(static c =>
@@ -134,12 +136,12 @@ if (app.Environment.IsDevelopment())
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "OdaMeClone API V1");
         c.RoutePrefix = string.Empty; // Set Swagger UI at the app's root
     });
-}
+    }
 else
-{
+    {
     app.UseExceptionHandler("/Error"); // Generic error handler for production
     app.UseHsts(); // Use HSTS in production
-}
+    }
 
 app.UseHttpsRedirection();
 app.UseRouting();

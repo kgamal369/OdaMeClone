@@ -1,107 +1,74 @@
+using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using OdaMeClone.Data;
-using OdaMeClone.Models;
+using OdaMeClone.Dtos.Projects;
+using OdaMeClone.Services;
 
 namespace OdaMeClone.Controllers
     {
-        /*
     [Route("api/[controller]")]
     [ApiController]
     public class ApartmentController : ControllerBase
         {
-        private readonly OdaDbContext _context;
+        private readonly ApartmentService _apartmentService;
 
-        public ApartmentController(OdaDbContext context)
+        public ApartmentController(ApartmentService apartmentService)
             {
-            _context = context;
+            _apartmentService = apartmentService;
             }
 
-        // GET: api/Apartment
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Apartment>>> GetApartments()
+        public ActionResult<IEnumerable<ApartmentDTO>> GetAllApartments()
             {
-            return await _context.Apartments.Include(a => a.Features).Include(a => a.Tasks).Include(a => a.Invoices).ToListAsync();
+            return Ok(_apartmentService.GetAllApartments());
             }
 
-        // GET: api/Apartment/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Apartment>> GetApartment(int id)
+        public ActionResult<ApartmentDTO> GetApartmentById(Guid id)
             {
-            var apartment = await _context.Apartments
-                                          .Include(a => a.Features)
-                                          .Include(a => a.Tasks)
-                                          .Include(a => a.Invoices)
-                                          .FirstOrDefaultAsync(a => a.Id == id);
-
-            if (apartment == null)
-                {
-                return NotFound();
-                }
-
-            return apartment;
-            }
-
-        // PUT: api/Apartment/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutApartment(int id, Apartment apartment)
-            {
-            if (id != apartment.Id)
-                {
-                return BadRequest();
-                }
-
-            _context.Entry(apartment).State = EntityState.Modified;
-
             try
                 {
-                await _context.SaveChangesAsync();
+                return Ok(_apartmentService.GetApartmentById(id));
                 }
-            catch (DbUpdateConcurrencyException)
+            catch (KeyNotFoundException ex)
                 {
-                if (!ApartmentExists(id))
-                    {
-                    return NotFound();
-                    }
-                else
-                    {
-                    throw;
-                    }
+                return NotFound(ex.Message);
                 }
-
-            return NoContent();
             }
 
-        // POST: api/Apartment
         [HttpPost]
-        public async Task<ActionResult<Apartment>> PostApartment(Apartment apartment)
+        public ActionResult AddApartment(ApartmentDTO apartmentDTO)
             {
-            _context.Apartments.Add(apartment);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetApartment", new { id = apartment.Id }, apartment);
+            _apartmentService.AddApartment(apartmentDTO);
+            return CreatedAtAction(nameof(GetApartmentById), new { id = apartmentDTO.ApartmentId }, apartmentDTO);
             }
 
-        // DELETE: api/Apartment/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteApartment(int id)
+        [HttpPut("{id}")]
+        public ActionResult UpdateApartment(Guid id, ApartmentDTO apartmentDTO)
             {
-            var apartment = await _context.Apartments.FindAsync(id);
-            if (apartment == null)
+            try
                 {
-                return NotFound();
+                _apartmentService.UpdateApartment(id, apartmentDTO);
+                return NoContent();
                 }
-
-            _context.Apartments.Remove(apartment);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            catch (KeyNotFoundException ex)
+                {
+                return NotFound(ex.Message);
+                }
             }
 
-        private bool ApartmentExists(int id)
+        [HttpDelete("{id}")]
+        public ActionResult DeleteApartment(Guid id)
             {
-            return _context.Apartments.Any(e => e.Id == id);
+            try
+                {
+                _apartmentService.DeleteApartment(id);
+                return NoContent();
+                }
+            catch (KeyNotFoundException ex)
+                {
+                return NotFound(ex.Message);
+                }
             }
         }
-        */
     }

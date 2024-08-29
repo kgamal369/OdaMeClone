@@ -6,9 +6,9 @@ using System.Linq;
 using OdaMeClone.Data;
 
 namespace OdaMeClone.Models
-{
-    public class Booking
     {
+    public class Booking
+        {
         [Key]
         public Guid BookingId { get; set; } // Primary Key
 
@@ -46,19 +46,19 @@ namespace OdaMeClone.Models
         public PaymentMethod PaymentMethod { get; set; } // Enum for Payment method
 
         public Booking()
-        {
+            {
             CreatedDateTime = DateTime.Now;
             Invoices = new List<Invoice>();
-        }
+            }
 
         public void StartBooking(OdaDbContext context, Customer customer, Apartment templateApartment)
-        {
+            {
             if (templateApartment == null)
                 throw new ArgumentNullException(nameof(templateApartment), "Template apartment cannot be null.");
 
             // Clone the template apartment
             var newApartment = new Apartment
-            {
+                {
                 ApartmentId = Guid.NewGuid(),
                 ApartmentName = templateApartment.ApartmentName,
                 ApartmentType = templateApartment.ApartmentType,
@@ -67,7 +67,7 @@ namespace OdaMeClone.Models
                 Status = ApartmentStatus.Booked,
                 ProjectId = templateApartment.ProjectId,
                 // Clone other necessary properties
-            };
+                };
 
             // Save the cloned apartment to the database
             context.Apartments.Add(newApartment);
@@ -79,10 +79,10 @@ namespace OdaMeClone.Models
 
             context.Bookings.Add(this);
             context.SaveChanges();
-        }
+            }
 
         public void AssignPackage(OdaDbContext context, Package package)
-        {
+            {
             if (Apartment == null)
                 throw new InvalidOperationException("No apartment assigned to this booking.");
 
@@ -90,10 +90,10 @@ namespace OdaMeClone.Models
             Apartment.CalculateTotalPrice();
 
             context.SaveChanges();
-        }
+            }
 
         public void AssignAddOn(OdaDbContext context, AddOn addon, int quantity)
-        {
+            {
             if (Apartment == null)
                 throw new InvalidOperationException("No apartment assigned to this booking.");
 
@@ -102,23 +102,23 @@ namespace OdaMeClone.Models
 
             var assignedAddon = Apartment.AssignedAddons.FirstOrDefault(a => a.AddOnId == addon.AddOnId);
             if (assignedAddon == null)
-            {
+                {
                 addon.InstalledUnits = quantity;
                 Apartment.AssignedAddons.Add(addon);
-            }
+                }
             else
-            {
+                {
                 assignedAddon.InstalledUnits += quantity;
                 if (assignedAddon.InstalledUnits > addon.MaxUnits)
                     throw new InvalidOperationException($"Total installed units of {addon.AddOnName} exceed the maximum allowed units.");
-            }
+                }
 
             Apartment.CalculateTotalPrice();
             context.SaveChanges();
-        }
+            }
 
         public void FinalizeBooking(OdaDbContext context)
-        {
+            {
             if (Apartment == null)
                 throw new InvalidOperationException("No apartment assigned to this booking.");
 
@@ -127,7 +127,7 @@ namespace OdaMeClone.Models
 
             // Create and add an invoice
             var invoice = new Invoice
-            {
+                {
                 InvoiceId = Guid.NewGuid(),
                 BookingId = this.BookingId,
                 CustomerId = this.CustomerId,
@@ -136,7 +136,7 @@ namespace OdaMeClone.Models
                 PaymentMethod = this.PaymentMethod,
                 CreatedDateTime = DateTime.Now,
                 Status = InvoiceStatus.Pending
-            };
+                };
 
             Invoices.Add(invoice);
             context.Invoices.Add(invoice);
@@ -147,17 +147,17 @@ namespace OdaMeClone.Models
             this.LastModifiedDateTime = DateTime.Now;
 
             context.SaveChanges();
-        }
+            }
 
         public void UpdateBookingStatus(OdaDbContext context, BookingStatus status)
-        {
+            {
             this.Status = status;
             this.LastModifiedDateTime = DateTime.Now;
 
             context.SaveChanges();
+            }
         }
+
+
+
     }
-
-
-
-}

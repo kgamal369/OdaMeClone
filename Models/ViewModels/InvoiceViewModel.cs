@@ -1,9 +1,9 @@
 using System;
 
 namespace OdaMeClone.Models.ViewModels
-{
-    public class InvoiceViewModel
     {
+    public class InvoiceViewModel
+        {
         public Guid InvoiceId { get; set; }
         public string CustomerName { get; set; } // Display customer name
         public string ApartmentName { get; set; } // Display apartment name
@@ -17,5 +17,5 @@ namespace OdaMeClone.Models.ViewModels
         public string PaymentStatus { get; set; } // Display payment status as string
         public string DisplayAmount => $"{Amount:C}";
         public string DisplayDueDate => DueDate.ToString("d");
+        }
     }
-}

@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 using OdaMeClone.Data;
 
 namespace OdaMeClone.Models
-{
-    public class Payment
     {
+    public class Payment
+        {
         [Key]
         public Guid PaymentId { get; set; } // Primary Key
 
@@ -35,11 +35,11 @@ namespace OdaMeClone.Models
 
         // Method to register a payment and update the invoice
         public void RegisterPayment(OdaDbContext context)
-        {
-            if (Invoice == null)
             {
+            if (Invoice == null)
+                {
                 throw new InvalidOperationException("Payment must be associated with a valid invoice.");
-            }
+                }
 
             // Apply the payment to the invoice
             Invoice.ApplyPayment(context, AmountPaid);
@@ -47,7 +47,7 @@ namespace OdaMeClone.Models
             // Save the payment record
             context.Payments.Add(this);
             context.SaveChanges();
+            }
         }
-    }
 
-}
+    }

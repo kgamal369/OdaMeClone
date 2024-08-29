@@ -1,9 +1,9 @@
 using System;
 
 namespace OdaMeClone.Dtos.Projects
-{
-    public class UserDTO
     {
+    public class UserDTO
+        {
         public int Id { get; set; }
         public string Username { get; set; }
         public string Email { get; set; }
@@ -15,5 +15,5 @@ namespace OdaMeClone.Dtos.Projects
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public bool TwoFactorEnabled { get; set; }
+        }
     }
-}
