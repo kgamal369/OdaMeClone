@@ -36,7 +36,7 @@ namespace OdaMeClone.Data.Seeders
                     Username = "admin",
                     Email = "admin@odameclone.com",
                     PasswordHash = _passwordHasher.HashPassword("Admin@123"),
-                    RoleId = _context.Roles.First(r => r.Name == "Admin").Id,
+                    RoleId = _context.Roles.First(r => r.Name == "Admin").RoleId,
                     EmailConfirmed = true
                     });
 

@@ -10,6 +10,7 @@ namespace OdaMeClone.Models
     public class Booking
         {
         [Key]
+         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid BookingId { get; set; } // Primary Key
 
         [Required]

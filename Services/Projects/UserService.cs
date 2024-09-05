@@ -21,7 +21,7 @@ namespace OdaMeClone.Services
             var users = _userRepository.GetAll();
             return users.Select(u => new UserDTO
                 {
-                Id = u.Id,
+                Id = u.UserId,
                 Username = u.Username,
                 Email = u.Email,
                 PhoneNumber = u.PhoneNumber,
@@ -45,7 +45,7 @@ namespace OdaMeClone.Services
 
             return new UserDTO
                 {
-                Id = user.Id,
+                Id = user.UserId,
                 Username = user.Username,
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,

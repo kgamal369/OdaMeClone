@@ -6,7 +6,8 @@ namespace OdaMeClone.Models
     public class RolePermission
         {
         [Key]
-        public int Id { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int RolePermissionId { get; set; }
 
         [Required]
         public int RoleId { get; set; }

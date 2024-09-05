@@ -21,13 +21,13 @@ namespace OdaMeClone.Services
             var roles = _roleRepository.GetAll();
             return roles.Select(r => new RoleDTO
                 {
-                Id = r.Id,
+                Id = r.RoleId,
                 Name = r.Name,
                 Description = r.Description,
                 CreatedAt = r.CreatedAt,
                 UpdatedAt = r.UpdatedAt,
-                UserIds = r.Users.Select(u => u.Id).ToList(),
-                RolePermissionIds = r.RolePermissions.Select(rp => rp.Id).ToList()
+                UserIds = r.Users.Select(u => u.RoleId).ToList(),
+                RolePermissionIds = r.RolePermissions.Select(rp => rp.RoleId).ToList()
                 });
             }
 
@@ -41,13 +41,13 @@ namespace OdaMeClone.Services
 
             return new RoleDTO
                 {
-                Id = role.Id,
+                Id = role.RoleId,
                 Name = role.Name,
                 Description = role.Description,
                 CreatedAt = role.CreatedAt,
                 UpdatedAt = role.UpdatedAt,
-                UserIds = role.Users.Select(u => u.Id).ToList(),
-                RolePermissionIds = role.RolePermissions.Select(rp => rp.Id).ToList()
+                UserIds = role.Users.Select(u => u.RoleId).ToList(),
+                RolePermissionIds = role.RolePermissions.Select(rp => rp.RoleId).ToList()
                 };
             }
 

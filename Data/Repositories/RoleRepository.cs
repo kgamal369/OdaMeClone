@@ -38,7 +38,7 @@ namespace OdaMeClone.Data.Repositories
             return _context.Roles
                 .Include(r => r.Users)
                 .Include(r => r.RolePermissions)
-                .FirstOrDefault(r => r.Id == id);
+                .FirstOrDefault(r => r.RoleId == id);
             }
 
         public void Add(Role role)

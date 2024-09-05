@@ -5,8 +5,8 @@
     
 
 2.Build and run :
-    2.1. dotnet clean  OdaMeClone.csproj
-    2.2. dotnet restore  OdaMeClone.csproj
+    2.1. dotnet clean OdaMeClone.csproj
+    2.2. dotnet restore OdaMeClone.csproj
     2.3. dotnet build OdaMeClone.csproj 
     2.4. dotnet run OdaMeClone.csproj 
 

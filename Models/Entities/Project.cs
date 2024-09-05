@@ -8,13 +8,13 @@ namespace OdaMeClone.Models
     public class Project
         {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid ProjectId { get; set; } // Primary Key
 
         [Required]
         [StringLength(100)]
         public string ProjectName { get; set; } // Name of the project
 
-        [Required]
         [StringLength(200)]
         public string Location { get; set; } // Location of the project
 
@@ -22,7 +22,13 @@ namespace OdaMeClone.Models
         public string Amenities { get; set; } // Description of common amenities
 
         [Required]
-        public int TotalUnits { get; set; } // Total number of apartments in the project
+        public int TotalUnits
+            {
+            get
+                {
+                return Apartments?.Count ?? 0;
+                }
+            } // Total number of apartments, auto-calculated } // Total number of apartments in the project
 
         public byte[] ProjectLogo { get; set; } // Project logo or photo
 
@@ -42,6 +48,7 @@ namespace OdaMeClone.Models
                 }
 
             Apartments.Add(apartment);
+            // TotalUnits will automatically update through the getter
             }
 
         // Method to remove an apartment from the project

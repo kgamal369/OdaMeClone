@@ -9,6 +9,7 @@ namespace OdaMeClone.Models
     public class AddOn
         {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid AddOnId { get; set; } // Primary Key
 
         [Required]

@@ -38,7 +38,7 @@ namespace OdaMeClone.Data.Repositories
             return _context.Users
                 .Include(u => u.Role)
                 .Include(u => u.Projects)
-                .FirstOrDefault(u => u.Id == id);
+                .FirstOrDefault(u => u.UserId == id);
             }
 
         public void Add(User user)

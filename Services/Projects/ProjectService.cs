@@ -26,7 +26,7 @@ namespace OdaMeClone.Services
                 Location = p.Location,
                 Amenities = p.Amenities,
                 TotalUnits = p.TotalUnits,
-                ProjectLogo = p.ProjectLogo,
+                ProjectLogo = null, // Don't expose logo in DTO
                 ApartmentIds = p.Apartments.Select(a => a.ApartmentId).ToList()
                 });
             }
@@ -46,27 +46,25 @@ namespace OdaMeClone.Services
                 Location = project.Location,
                 Amenities = project.Amenities,
                 TotalUnits = project.TotalUnits,
-                ProjectLogo = project.ProjectLogo,
+                ProjectLogo = null, // Don't expose logo in DTO
                 ApartmentIds = project.Apartments.Select(a => a.ApartmentId).ToList()
                 };
             }
 
-        public void AddProject(ProjectDTO projectDTO)
+        public void AddProject(ProjectDTO projectDTO, byte[] logoBytes)
             {
             var project = new Project
                 {
-                ProjectId = Guid.NewGuid(),
                 ProjectName = projectDTO.ProjectName,
                 Location = projectDTO.Location,
                 Amenities = projectDTO.Amenities,
-                TotalUnits = projectDTO.TotalUnits,
-                ProjectLogo = projectDTO.ProjectLogo
+                ProjectLogo = logoBytes
                 };
 
             _projectRepository.Add(project);
             }
 
-        public void UpdateProject(Guid id, ProjectDTO projectDTO)
+        public void UpdateProject(Guid id, ProjectDTO projectDTO, byte[] logoBytes)
             {
             var project = _projectRepository.GetById(id);
             if (project == null)
@@ -77,8 +75,11 @@ namespace OdaMeClone.Services
             project.ProjectName = projectDTO.ProjectName;
             project.Location = projectDTO.Location;
             project.Amenities = projectDTO.Amenities;
-            project.TotalUnits = projectDTO.TotalUnits;
-            project.ProjectLogo = projectDTO.ProjectLogo;
+
+            if (logoBytes != null)
+                {
+                project.ProjectLogo = logoBytes;
+                }
 
             _projectRepository.Update(project);
             }

@@ -9,6 +9,7 @@ namespace OdaMeClone.Models
     public class Apartment
         {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid ApartmentId { get; set; } // Primary Key
 
         [Required]
@@ -17,9 +18,12 @@ namespace OdaMeClone.Models
 
         [Required]
         public ApartmentType ApartmentType { get; set; } // Enum for Apartment Type
+                                                         // Status of the Apartment
+        [Required]
+        public ApartmentStatus Status { get; set; } // Enum to track apartment status
 
         [Required]
-        [Range(10, 10000, ErrorMessage = "Space must be between 10 and 10,000 square meters.")]
+        [Range(10, 1000, ErrorMessage = "Space must be between 10 and 1,000 square meters.")]
         public double Space { get; set; } // Space in square meters
 
         [StringLength(1000, ErrorMessage = "Description can't be longer than 1000 characters.")]
@@ -27,22 +31,23 @@ namespace OdaMeClone.Models
 
         public List<byte[]> ApartmentPhotos { get; set; } // List of photos of the apartment
 
-        public virtual ICollection<Package> PackagesList { get; set; } // List of associated packages
-
-        public virtual ICollection<AddOn> AddonsList { get; set; } // List of associated addons
+        // Navigation properties to ensure proper relationship mapping
+        [Required]
+        public Guid ProjectId { get; set; }  // Foreign Key to Project
+        public virtual Project Project { get; set; } // Navigation property to Project
 
         // Conditional attributes
         [ForeignKey("Customer")]
         public Guid? CustomerId { get; set; } // Foreign Key to Customer, nullable if not booked
         public virtual Customer Customer { get; set; } // Navigation property to Customer
 
-        // Status of the Apartment
-        [Required]
-        public ApartmentStatus Status { get; set; } // Enum to track apartment status
 
-        // Navigation properties to ensure proper relationship mapping
-        public Guid ProjectId { get; set; }  // Foreign Key to Project
-        public virtual Project Project { get; set; } // Navigation property to Project
+        public virtual ICollection<Package> PackagesList { get; set; } // List of associated available packages
+
+        public virtual ICollection<AddOn> AddonsList { get; set; } // List of associated available addons
+
+
+
 
         [ForeignKey("AssignedPackage")]
         public Guid? AssignedPackageId { get; set; } // Foreign Key to Assigned Package

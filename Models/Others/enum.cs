@@ -27,6 +27,7 @@ namespace OdaMeClone.Models
         {
         ForSale,
         Booked,
+        InReview,
         InProgress,
         Template,
         Completed

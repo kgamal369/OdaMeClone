@@ -8,6 +8,9 @@ namespace OdaMeClone.Models
     {
     public class ApartmentAddOn
         {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)] // The DB will auto-generate the Guid
+        public Guid   ApartmentAddOnId { get; set; }
         public Guid ApartmentId { get; set; }
         public Apartment Apartment { get; set; }
 

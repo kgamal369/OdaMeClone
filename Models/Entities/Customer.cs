@@ -8,6 +8,7 @@ namespace OdaMeClone.Models
     public class Customer
         {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid CustomerId { get; set; } // Primary Key
 
         [Required]

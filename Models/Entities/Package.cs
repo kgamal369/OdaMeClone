@@ -9,6 +9,7 @@ namespace OdaMeClone.Models
     public class Package
         {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid PackageId { get; set; } // Primary Key
 
         [Required]

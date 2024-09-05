@@ -1,4 +1,6 @@
 using System;
+using System.IO;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OdaMeClone.Dtos.Projects;
 using OdaMeClone.Services;
@@ -38,29 +40,47 @@ namespace OdaMeClone.Controllers
             }
 
         [HttpPost]
-        public IActionResult AddProject([FromBody] ProjectDTO projectDTO)
+        public IActionResult AddProject([FromForm] ProjectDTO projectDTO)
             {
             if (projectDTO == null)
                 {
                 return BadRequest("Invalid project data.");
                 }
 
-            _projectService.AddProject(projectDTO);
+            byte[] logoBytes = null;
+            if (projectDTO.ProjectLogo != null)
+                {
+                using (var memoryStream = new MemoryStream())
+                    {
+                    projectDTO.ProjectLogo.CopyTo(memoryStream);
+                    logoBytes = memoryStream.ToArray();
+                    }
+                }
+
+            _projectService.AddProject(projectDTO, logoBytes);
             return CreatedAtAction(nameof(GetProjectById), new { id = projectDTO.ProjectId }, projectDTO);
             }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateProject(Guid id, [FromBody] ProjectDTO projectDTO)
+        public IActionResult UpdateProject(Guid id, [FromForm] ProjectDTO projectDTO)
             {
-            try
+            if (projectDTO == null)
                 {
-                _projectService.UpdateProject(id, projectDTO);
-                return NoContent();
+                return BadRequest("Invalid project data.");
                 }
-            catch (KeyNotFoundException ex)
+
+            byte[] logoBytes = null;
+            if (projectDTO.ProjectLogo != null)
                 {
-                return NotFound(ex.Message);
+                using (var memoryStream = new MemoryStream())
+                    {
+                    projectDTO.ProjectLogo.CopyTo(memoryStream);
+                    logoBytes = memoryStream.ToArray();
+                    }
                 }
+
+            _projectService.UpdateProject(id, projectDTO, logoBytes);
+            return NoContent();
             }
 
         [HttpDelete("{id}")]

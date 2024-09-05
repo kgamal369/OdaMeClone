@@ -8,6 +8,7 @@ namespace OdaMeClone.Models
     public class Invoice
         {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid InvoiceId { get; set; } // Primary Key
 
         [Required]
