@@ -30,7 +30,7 @@ namespace OdaMeClone.Services
                 PackageIds = a.PackagesList.Select(p => p.PackageId).ToList(),
                 AddOnIds = a.AssignedAddons.Select(ad => ad.AddOnId).ToList(),
                 CustomerId = a.CustomerId,
-                Status = a.Status,
+                ApartmentStatus = a.ApartmentStatus,
                 ProjectId = a.ProjectId,
                 AssignedPackageId = a.AssignedPackageId,
                 ApartmentAddOns = a.ApartmentAddOns.Select(ao => new ApartmentAddOnDTO
@@ -64,7 +64,7 @@ namespace OdaMeClone.Services
                 PackageIds = apartment.PackagesList.Select(p => p.PackageId).ToList(),
                 AddOnIds = apartment.AssignedAddons.Select(ad => ad.AddOnId).ToList(),
                 CustomerId = apartment.CustomerId,
-                Status = apartment.Status,
+                ApartmentStatus = apartment.ApartmentStatus,
                 ProjectId = apartment.ProjectId,
                 AssignedPackageId = apartment.AssignedPackageId,
                 ApartmentAddOns = apartment.ApartmentAddOns.Select(ao => new ApartmentAddOnDTO
@@ -81,6 +81,17 @@ namespace OdaMeClone.Services
 
         public void AddApartment(ApartmentDTO apartmentDTO)
             {
+            // Validate ApartmentType enum
+            if (!Enum.IsDefined(typeof(ApartmentType), apartmentDTO.ApartmentType))
+                {
+                throw new ArgumentException("Invalid Apartment Type.");
+                }
+
+            // Validate ApartmentStatus enum
+            if (!Enum.IsDefined(typeof(ApartmentStatus), apartmentDTO.ApartmentStatus))
+                {
+                throw new ArgumentException("Invalid Apartment Status.");
+                }
             var apartment = new Apartment
                 {
                 ApartmentId = Guid.NewGuid(),
@@ -90,7 +101,7 @@ namespace OdaMeClone.Services
                 Description = apartmentDTO.Description,
                 ApartmentPhotos = apartmentDTO.ApartmentPhotos,
                 CustomerId = apartmentDTO.CustomerId,
-                Status = apartmentDTO.Status,
+                ApartmentStatus = apartmentDTO.ApartmentStatus,
                 ProjectId = apartmentDTO.ProjectId,
                 AssignedPackageId = apartmentDTO.AssignedPackageId,
                 FloorNumber = apartmentDTO.FloorNumber,
@@ -103,6 +114,17 @@ namespace OdaMeClone.Services
 
         public void UpdateApartment(Guid apartmentId, ApartmentDTO apartmentDTO)
             {
+            // Validate ApartmentType enum
+            if (!Enum.IsDefined(typeof(ApartmentType), apartmentDTO.ApartmentType))
+                {
+                throw new ArgumentException("Invalid Apartment Type.");
+                }
+
+            // Validate ApartmentStatus enum
+            if (!Enum.IsDefined(typeof(ApartmentStatus), apartmentDTO.ApartmentStatus))
+                {
+                throw new ArgumentException("Invalid Apartment Status.");
+                }
             var apartment = _apartmentRepository.GetById(apartmentId);
             if (apartment == null)
                 {
@@ -115,7 +137,7 @@ namespace OdaMeClone.Services
             apartment.Description = apartmentDTO.Description;
             apartment.ApartmentPhotos = apartmentDTO.ApartmentPhotos;
             apartment.CustomerId = apartmentDTO.CustomerId;
-            apartment.Status = apartmentDTO.Status;
+            apartment.ApartmentStatus = apartmentDTO.ApartmentStatus;
             apartment.ProjectId = apartmentDTO.ProjectId;
             apartment.AssignedPackageId = apartmentDTO.AssignedPackageId;
             apartment.FloorNumber = apartmentDTO.FloorNumber;

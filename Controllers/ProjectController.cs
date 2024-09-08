@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using OdaMeClone.Data;
 using OdaMeClone.Dtos.Projects;
 using OdaMeClone.Services;
 
@@ -12,10 +13,13 @@ namespace OdaMeClone.Controllers
     public class ProjectController : ControllerBase
         {
         private readonly ProjectService _projectService;
+        private readonly OdaDbContext _context; // Declare OdaDbContext
 
-        public ProjectController(ProjectService projectService)
+
+        public ProjectController(ProjectService projectService, OdaDbContext context)
             {
             _projectService = projectService;
+            _context = context;
             }
 
         [HttpGet]
@@ -54,6 +58,18 @@ namespace OdaMeClone.Controllers
                     {
                     projectDTO.ProjectLogo.CopyTo(memoryStream);
                     logoBytes = memoryStream.ToArray();
+                    }
+                }
+
+            // Check if the provided ApartmentIds exist in the database
+            if (projectDTO.ApartmentIds != null && projectDTO.ApartmentIds.Count > 0)
+                {
+                var existingApartmentIds = _context.Apartments.Select(a => a.ApartmentId).ToList();
+                var nonExistingIds = projectDTO.ApartmentIds.Except(existingApartmentIds).ToList();
+
+                if (nonExistingIds.Any())
+                    {
+                    return BadRequest($"The following Apartment IDs do not exist: {string.Join(", ", nonExistingIds)}");
                     }
                 }
 

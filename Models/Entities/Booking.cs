@@ -10,7 +10,7 @@ namespace OdaMeClone.Models
     public class Booking
         {
         [Key]
-         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid BookingId { get; set; } // Primary Key
 
         [Required]
@@ -28,7 +28,7 @@ namespace OdaMeClone.Models
         public DateTime CreatedDateTime { get; set; } // Booking creation date and time
 
         [Required]
-        public BookingStatus Status { get; set; } // Enum for Booking status
+        public BookingStatus BookingStatus { get; set; } // Enum for Booking status
 
         public DateTime LastModifiedDateTime { get; set; } // Last modified date and time
 
@@ -65,7 +65,7 @@ namespace OdaMeClone.Models
                 ApartmentType = templateApartment.ApartmentType,
                 Space = templateApartment.Space,
                 Description = templateApartment.Description,
-                Status = ApartmentStatus.Booked,
+                ApartmentStatus = ApartmentStatus.Booked,
                 ProjectId = templateApartment.ProjectId,
                 // Clone other necessary properties
                 };
@@ -136,7 +136,7 @@ namespace OdaMeClone.Models
                 Amount = totalAmount,
                 PaymentMethod = this.PaymentMethod,
                 CreatedDateTime = DateTime.Now,
-                Status = InvoiceStatus.Pending
+                InvoiceStatus = InvoiceStatus.Pending
                 };
 
             Invoices.Add(invoice);
@@ -144,7 +144,7 @@ namespace OdaMeClone.Models
             context.SaveChanges();
 
             // Update booking status
-            this.Status = BookingStatus.Finalized;
+            this.BookingStatus = BookingStatus.Finalized;
             this.LastModifiedDateTime = DateTime.Now;
 
             context.SaveChanges();
@@ -152,7 +152,7 @@ namespace OdaMeClone.Models
 
         public void UpdateBookingStatus(OdaDbContext context, BookingStatus status)
             {
-            this.Status = status;
+            this.BookingStatus = status;
             this.LastModifiedDateTime = DateTime.Now;
 
             context.SaveChanges();

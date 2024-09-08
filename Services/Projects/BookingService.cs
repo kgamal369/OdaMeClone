@@ -25,7 +25,7 @@ namespace OdaMeClone.Services
                 CustomerId = b.CustomerId,
                 ApartmentId = b.ApartmentId,
                 CreatedDateTime = b.CreatedDateTime,
-                Status = b.Status,
+                BookingStatus = b.BookingStatus,
                 LastModifiedDateTime = b.LastModifiedDateTime,
                 AssignedPerson = b.AssignedPerson,
                 RemainingAmount = b.RemainingAmount,
@@ -36,7 +36,7 @@ namespace OdaMeClone.Services
                     InvoiceId = i.InvoiceId,
                     Amount = i.Amount,
                     PaymentMethod = i.PaymentMethod,
-                    Status = i.Status
+                    InvoiceStatus = i.InvoiceStatus
                     }).ToList()
                 });
             }
@@ -55,7 +55,7 @@ namespace OdaMeClone.Services
                 CustomerId = booking.CustomerId,
                 ApartmentId = booking.ApartmentId,
                 CreatedDateTime = booking.CreatedDateTime,
-                Status = booking.Status,
+                BookingStatus = booking.BookingStatus,
                 LastModifiedDateTime = booking.LastModifiedDateTime,
                 AssignedPerson = booking.AssignedPerson,
                 RemainingAmount = booking.RemainingAmount,
@@ -66,7 +66,7 @@ namespace OdaMeClone.Services
                     InvoiceId = i.InvoiceId,
                     Amount = i.Amount,
                     PaymentMethod = i.PaymentMethod,
-                    Status = i.Status
+                    InvoiceStatus = i.InvoiceStatus
                     }).ToList()
                 };
             }
@@ -79,7 +79,7 @@ namespace OdaMeClone.Services
                 CustomerId = bookingDTO.CustomerId,
                 ApartmentId = bookingDTO.ApartmentId,
                 CreatedDateTime = DateTime.Now,
-                Status = BookingStatus.Pending,
+                BookingStatus = BookingStatus.Pending,
                 AssignedPerson = bookingDTO.AssignedPerson,
                 PaymentMethod = bookingDTO.PaymentMethod
                 };
@@ -95,7 +95,7 @@ namespace OdaMeClone.Services
                 throw new KeyNotFoundException("Booking not found");
                 }
 
-            booking.Status = bookingDTO.Status;
+            booking.BookingStatus = bookingDTO.BookingStatus;
             booking.LastModifiedDateTime = DateTime.Now;
             booking.AssignedPerson = bookingDTO.AssignedPerson;
 

@@ -12,7 +12,7 @@ namespace OdaMeClone.Dtos.Projects
         public decimal Amount { get; set; }
         public PaymentMethod PaymentMethod { get; set; }
         public DateTime CreatedDateTime { get; set; }
-        public InvoiceStatus Status { get; set; }
+        public InvoiceStatus InvoiceStatus { get; set; }
         public DateTime DueDate { get; set; }
         public DateTime? PaymentDate { get; set; }
         public PaymentStatus PaymentStatus { get; set; }

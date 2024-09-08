@@ -13,7 +13,7 @@ using OdaMeClone.Data;
 namespace OdaMeClone.Migrations
 {
     [DbContext(typeof(OdaDbContext))]
-    [Migration("20240905212523_InitialCreate")]
+    [Migration("20240908195252_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -44,9 +44,6 @@ namespace OdaMeClone.Migrations
                     b.Property<Guid?>("ApartmentId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("ApartmentId1")
-                        .HasColumnType("uuid");
-
                     b.Property<int>("InstalledUnits")
                         .HasColumnType("integer");
 
@@ -59,8 +56,6 @@ namespace OdaMeClone.Migrations
                     b.HasKey("AddOnId");
 
                     b.HasIndex("ApartmentId");
-
-                    b.HasIndex("ApartmentId1");
 
                     b.ToTable("AddOns", "OdaMeClone");
                 });
@@ -77,8 +72,10 @@ namespace OdaMeClone.Migrations
                         .HasColumnType("character varying(100)");
 
                     b.Property<List<byte[]>>("ApartmentPhotos")
-                        .IsRequired()
                         .HasColumnType("bytea[]");
+
+                    b.Property<int>("ApartmentStatus")
+                        .HasColumnType("integer");
 
                     b.Property<int>("ApartmentType")
                         .HasColumnType("integer");
@@ -93,7 +90,6 @@ namespace OdaMeClone.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("character varying(1000)");
 
@@ -105,9 +101,6 @@ namespace OdaMeClone.Migrations
 
                     b.Property<double>("Space")
                         .HasColumnType("double precision");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
 
                     b.Property<string>("ViewType")
                         .IsRequired()
@@ -160,6 +153,9 @@ namespace OdaMeClone.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
+                    b.Property<int>("BookingStatus")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime>("CreatedDateTime")
                         .HasColumnType("timestamp with time zone");
 
@@ -170,9 +166,6 @@ namespace OdaMeClone.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("PaymentMethod")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Status")
                         .HasColumnType("integer");
 
                     b.HasKey("BookingId");
@@ -234,6 +227,9 @@ namespace OdaMeClone.Migrations
                     b.Property<DateTime>("DueDate")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<int>("InvoiceStatus")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime?>("PaymentDate")
                         .HasColumnType("timestamp with time zone");
 
@@ -241,9 +237,6 @@ namespace OdaMeClone.Migrations
                         .HasColumnType("integer");
 
                     b.Property<int>("PaymentStatus")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Status")
                         .HasColumnType("integer");
 
                     b.HasKey("InvoiceId");
@@ -321,17 +314,14 @@ namespace OdaMeClone.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("Amenities")
-                        .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("character varying(1000)");
 
                     b.Property<string>("Location")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
                     b.Property<byte[]>("ProjectLogo")
-                        .IsRequired()
                         .HasColumnType("bytea");
 
                     b.Property<string>("ProjectName")
@@ -361,7 +351,6 @@ namespace OdaMeClone.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
@@ -467,12 +456,8 @@ namespace OdaMeClone.Migrations
             modelBuilder.Entity("OdaMeClone.Models.AddOn", b =>
                 {
                     b.HasOne("OdaMeClone.Models.Apartment", null)
-                        .WithMany("AddonsList")
-                        .HasForeignKey("ApartmentId");
-
-                    b.HasOne("OdaMeClone.Models.Apartment", null)
                         .WithMany("AssignedAddons")
-                        .HasForeignKey("ApartmentId1");
+                        .HasForeignKey("ApartmentId");
                 });
 
             modelBuilder.Entity("OdaMeClone.Models.Apartment", b =>
@@ -627,8 +612,6 @@ namespace OdaMeClone.Migrations
 
             modelBuilder.Entity("OdaMeClone.Models.Apartment", b =>
                 {
-                    b.Navigation("AddonsList");
-
                     b.Navigation("ApartmentAddOns");
 
                     b.Navigation("AssignedAddons");

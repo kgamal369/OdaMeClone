@@ -13,13 +13,13 @@ namespace OdaMeClone.Models
 
         [Required]
         [StringLength(100)]
-        public string ProjectName { get; set; } // Name of the project
+        public string? ProjectName { get; set; } // Name of the project
 
         [StringLength(200)]
-        public string Location { get; set; } // Location of the project
+        public string? Location { get; set; } // Location of the project
 
         [StringLength(1000)]
-        public string Amenities { get; set; } // Description of common amenities
+        public string? Amenities { get; set; } // Description of common amenities
 
         [Required]
         public int TotalUnits
@@ -30,7 +30,7 @@ namespace OdaMeClone.Models
                 }
             } // Total number of apartments, auto-calculated } // Total number of apartments in the project
 
-        public byte[] ProjectLogo { get; set; } // Project logo or photo
+        public byte[]? ProjectLogo { get; set; } // Project logo or photo
 
         public virtual ICollection<Apartment> Apartments { get; set; } // List of associated apartments
 

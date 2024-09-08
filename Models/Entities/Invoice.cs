@@ -15,19 +15,19 @@ namespace OdaMeClone.Models
         [ForeignKey("Customer")]
         public Guid CustomerId { get; set; } // Foreign Key to Customer
 
-        public virtual Customer Customer { get; set; } // Navigation Property
+        public virtual Customer? Customer { get; set; } // Navigation Property
 
         [Required]
         [ForeignKey("Apartment")]
         public Guid ApartmentId { get; set; } // Foreign Key to Apartment
 
-        public virtual Apartment Apartment { get; set; } // Navigation Property
+        public virtual Apartment? Apartment { get; set; } // Navigation Property
 
         [Required]
         [ForeignKey("Booking")]
         public Guid BookingId { get; set; } // Foreign Key to Booking
 
-        public virtual Booking Booking { get; set; } // Navigation Property
+        public virtual Booking? Booking { get; set; } // Navigation Property
 
         [Required]
         [Column(TypeName = "decimal(18,2)")]
@@ -40,7 +40,7 @@ namespace OdaMeClone.Models
         public DateTime CreatedDateTime { get; set; } // Date and time the invoice was created
 
         [Required]
-        public InvoiceStatus Status { get; set; } // Enum for invoice status
+        public InvoiceStatus InvoiceStatus { get; set; } // Enum for invoice status
 
         [Required]
         public DateTime DueDate { get; set; } // Payment due date

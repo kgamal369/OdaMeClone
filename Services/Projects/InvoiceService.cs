@@ -28,7 +28,7 @@ namespace OdaMeClone.Services
                 Amount = i.Amount,
                 PaymentMethod = i.PaymentMethod,
                 CreatedDateTime = i.CreatedDateTime,
-                Status = i.Status,
+                InvoiceStatus = i.InvoiceStatus,
                 DueDate = i.DueDate,
                 PaymentDate = i.PaymentDate,
                 PaymentStatus = i.PaymentStatus
@@ -52,7 +52,7 @@ namespace OdaMeClone.Services
                 Amount = invoice.Amount,
                 PaymentMethod = invoice.PaymentMethod,
                 CreatedDateTime = invoice.CreatedDateTime,
-                Status = invoice.Status,
+                InvoiceStatus = invoice.InvoiceStatus,
                 DueDate = invoice.DueDate,
                 PaymentDate = invoice.PaymentDate,
                 PaymentStatus = invoice.PaymentStatus
@@ -70,7 +70,7 @@ namespace OdaMeClone.Services
                 Amount = invoiceDTO.Amount,
                 PaymentMethod = invoiceDTO.PaymentMethod,
                 CreatedDateTime = DateTime.Now,
-                Status = InvoiceStatus.Pending,
+                InvoiceStatus = InvoiceStatus.Pending,
                 DueDate = invoiceDTO.DueDate,
                 PaymentDate = invoiceDTO.PaymentDate,
                 PaymentStatus = invoiceDTO.PaymentStatus
@@ -89,7 +89,7 @@ namespace OdaMeClone.Services
 
             invoice.Amount = invoiceDTO.Amount;
             invoice.PaymentMethod = invoiceDTO.PaymentMethod;
-            invoice.Status = invoiceDTO.Status;
+            invoice.InvoiceStatus = invoiceDTO.InvoiceStatus;
             invoice.DueDate = invoiceDTO.DueDate;
             invoice.PaymentDate = invoiceDTO.PaymentDate;
             invoice.PaymentStatus = invoiceDTO.PaymentStatus;

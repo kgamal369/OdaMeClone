@@ -14,7 +14,7 @@ namespace OdaMeClone.Models
 
         [Required]
         [StringLength(100)]
-        public string PackageName { get; set; } // Name of the package
+        public string? PackageName { get; set; } // Name of the package
 
         [Required]
         public PackageType PackageType { get; set; } // Enum for Package Type

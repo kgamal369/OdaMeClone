@@ -11,14 +11,14 @@ namespace OdaMeClone.Models
 
         [Required]
         [MaxLength(50)]
-        public string Username { get; set; }
+        public string? Username { get; set; }
 
         [Required]
-        public string PasswordHash { get; set; } // Store hashed passwords
+        public string? PasswordHash { get; set; } // Store hashed passwords
 
         [Required]
         [EmailAddress]
-        public string Email { get; set; }
+        public string? Email { get; set; }
 
         [Phone]
         public string? PhoneNumber { get; set; }
@@ -30,7 +30,7 @@ namespace OdaMeClone.Models
 
         [Required]
         public int RoleId { get; set; }
-        public Role Role { get; set; }
+        public Role? Role { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;

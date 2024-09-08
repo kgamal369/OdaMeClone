@@ -11,9 +11,9 @@ namespace OdaMeClone.Models
 
         [Required]
         public int RoleId { get; set; }
-        public Role Role { get; set; }
+        public Role? Role { get; set; }
 
         [Required]
-        public string Permission { get; set; } // e.g., "ViewReports", "ManageUsers", "EditProjects"
+        public string? Permission { get; set; } // e.g., "ViewReports", "ManageUsers", "EditProjects"
         }
     }

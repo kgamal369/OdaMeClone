@@ -15,13 +15,13 @@ namespace OdaMeClone.Models
         [ForeignKey("Customer")]
         public Guid CustomerId { get; set; } // Foreign Key to Customer
 
-        public virtual Customer Customer { get; set; } // Navigation Property
+        public virtual Customer? Customer { get; set; } // Navigation Property
 
         [Required]
         [ForeignKey("Invoice")]
         public Guid InvoiceId { get; set; } // Foreign Key to Invoice
 
-        public virtual Invoice Invoice { get; set; } // Navigation Property
+        public virtual Invoice? Invoice { get; set; } // Navigation Property
 
         [Required]
         [Column(TypeName = "decimal(18,2)")]

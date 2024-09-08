@@ -14,7 +14,7 @@ namespace OdaMeClone.Models
 
         [Required]
         [StringLength(100, MinimumLength = 2, ErrorMessage = "AddOn Name must be between 2 and 100 characters.")]
-        public string AddOnName { get; set; } // Name of the addon
+        public string? AddOnName { get; set; } // Name of the addon
 
         [Required]
         public AddOnType AddOnType { get; set; } // Enum for AddOn Type
@@ -27,6 +27,8 @@ namespace OdaMeClone.Models
         [Required]
         [Range(1, 100, ErrorMessage = "Max units must be between 1 and 100.")]
         public int MaxUnits { get; set; } // Maximum units allowed for installation
+
+        // Navigation property for the many-to-many relationship via ApartmentAddOn
         public virtual ICollection<ApartmentAddOn> ApartmentAddOns { get; set; }
 
         [Range(0, 100, ErrorMessage = "Installed units must be between 0 and the maximum units allowed.")]

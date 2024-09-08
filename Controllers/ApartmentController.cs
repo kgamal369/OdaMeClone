@@ -20,6 +20,11 @@ namespace OdaMeClone.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<ApartmentDTO>> GetAllApartments()
             {
+            var apartments = _apartmentService.GetAllApartments();
+            if (apartments == null)
+                {
+                return NotFound("No apartments found.");
+                }
             return Ok(_apartmentService.GetAllApartments());
             }
 
@@ -28,7 +33,12 @@ namespace OdaMeClone.Controllers
             {
             try
                 {
-                return Ok(_apartmentService.GetApartmentById(id));
+                var apartment = _apartmentService.GetApartmentById(id);
+                if (apartment == null)
+                    {
+                    return NotFound($"Apartment with ID {id} not found.");
+                    }
+                return Ok(apartment);
                 }
             catch (KeyNotFoundException ex)
                 {
@@ -39,6 +49,11 @@ namespace OdaMeClone.Controllers
         [HttpPost]
         public ActionResult AddApartment(ApartmentDTO apartmentDTO)
             {
+            if (apartmentDTO == null || !ModelState.IsValid)
+                {
+                return BadRequest("Invalid apartment data.");
+                }
+
             _apartmentService.AddApartment(apartmentDTO);
             return CreatedAtAction(nameof(GetApartmentById), new { id = apartmentDTO.ApartmentId }, apartmentDTO);
             }
@@ -46,6 +61,11 @@ namespace OdaMeClone.Controllers
         [HttpPut("{id}")]
         public ActionResult UpdateApartment(Guid id, ApartmentDTO apartmentDTO)
             {
+            if (apartmentDTO == null || !ModelState.IsValid)
+                {
+                return BadRequest("Invalid apartment data.");
+                }
+
             try
                 {
                 _apartmentService.UpdateApartment(id, apartmentDTO);

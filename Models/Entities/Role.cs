@@ -11,10 +11,10 @@ namespace OdaMeClone.Models
 
         [Required]
         [MaxLength(50)]
-        public string Name { get; set; } // e.g., "Admin", "User", "Manager"
+        public string? Name { get; set; } // e.g., "Admin", "User", "Manager"
 
         [MaxLength(200)]
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
