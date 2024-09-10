@@ -101,11 +101,17 @@ namespace OdaMeClone.Models
             if (quantity > addon.MaxUnits)
                 throw new InvalidOperationException($"Cannot install more than {addon.MaxUnits} units of {addon.AddOnName}.");
 
-            var assignedAddon = Apartment.AssignedAddons.FirstOrDefault(a => a.AddOnId == addon.AddOnId);
+            var assignedAddon = Apartment.AssignedApartmentAddOns.FirstOrDefault(a => a.AddOnId == addon.AddOnId);
             if (assignedAddon == null)
                 {
-                addon.InstalledUnits = quantity;
-                Apartment.AssignedAddons.Add(addon);
+                var newApartmentAddOn = new ApartmentAddOn
+                    {
+                    AddOnId = addon.AddOnId,
+                    ApartmentId = Apartment.ApartmentId,
+                    AddOn = addon,
+                    InstalledUnits = quantity
+                    };
+                Apartment.AssignedApartmentAddOns.Add(newApartmentAddOn);
                 }
             else
                 {

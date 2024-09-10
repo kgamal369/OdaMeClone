@@ -94,5 +94,9 @@ namespace OdaMeClone.Services
 
             _projectRepository.Delete(project);
             }
+        public bool IsValidProject(Guid projectId)
+            {
+            return _projectRepository.GetById(projectId) != null;
+            }
         }
     }

@@ -40,11 +40,28 @@ namespace OdaMeClone.Controllers
         [HttpPost]
         public IActionResult AddBooking([FromBody] BookingDTO bookingDTO)
             {
-            if (bookingDTO == null)
+            if (bookingDTO == null || !ModelState.IsValid)
                 {
                 return BadRequest("Invalid booking data.");
                 }
 
+            // Ensure that the selected apartment, package, and add-ons are valid
+            if (!_bookingService.IsValidApartment(bookingDTO.ApartmentId))
+                {
+                return BadRequest("Invalid apartment.");
+                }
+
+            if (!_bookingService.IsValidPackage(bookingDTO.ApartmentId, bookingDTO.PackageId))
+                {
+                return BadRequest("Selected package is not available for this apartment.");
+                }
+
+            if (!_bookingService.AreValidAddOns(bookingDTO.ApartmentId, bookingDTO.AddOnIds))
+                {
+                return BadRequest("Some of the selected add-ons are not available for this apartment.");
+                }
+
+            // Proceed with booking
             _bookingService.AddBooking(bookingDTO);
             return CreatedAtAction(nameof(GetBookingById), new { id = bookingDTO.BookingId }, bookingDTO);
             }

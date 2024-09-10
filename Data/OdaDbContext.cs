@@ -79,7 +79,7 @@ namespace OdaMeClone.Data
 
             modelBuilder.Entity<ApartmentAddOn>()
                 .HasOne(aa => aa.Apartment)
-                .WithMany(a => a.ApartmentAddOns)
+                .WithMany(a => a.AssignedApartmentAddOns)
                 .HasForeignKey(aa => aa.ApartmentId);
 
             modelBuilder.Entity<ApartmentAddOn>()

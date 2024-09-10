@@ -46,8 +46,8 @@ namespace OdaMeClone.Models
 
             // Fetch all apartments that have this addon assigned
             var apartments = context.Apartments
-                .Where(a => a.AssignedAddons.Any(ad => ad.AddOnId == this.AddOnId))
-                .ToList();
+                  .Where(a => a.AssignedApartmentAddOns.Any(ad => ad.AddOnId == this.AddOnId))
+                  .ToList();
 
             foreach (var apartment in apartments)
                 {

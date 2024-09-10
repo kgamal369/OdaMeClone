@@ -43,17 +43,17 @@ namespace OdaMeClone.Models
         public virtual Customer Customer { get; set; } // Navigation property to Customer
 
 
-        public virtual ICollection<Package> PackagesList { get; set; } // List of associated available packages
+        public virtual ICollection<Package> AvailablePackages { get; set; } // List of associated available packages
 
-    //    public virtual ICollection<AddOn> AddonsList { get; set; } // List of associated available addons
+        //    public virtual ICollection<AddOn> AddonsList { get; set; } // List of associated available addons
 
         [ForeignKey("AssignedPackage")]
         public Guid? AssignedPackageId { get; set; } // Foreign Key to Assigned Package
         public virtual Package AssignedPackage { get; set; } // Navigation Property
-        public virtual ICollection<ApartmentAddOn> ApartmentAddOns { get; set; }
+        public virtual ICollection<ApartmentAddOn> AvailableApartmentAddOns { get; set; }
 
         // Navigation property for many-to-many relationship with AddOns via ApartmentAddOn
-        public virtual ICollection<AddOn> AssignedAddons { get; set; } // List of selected addons (Optional)
+        public virtual ICollection<ApartmentAddOn> AssignedApartmentAddOns { get; set; } // List of selected addons (Optional)
 
         // Calculated field for total price
         [NotMapped]
@@ -68,31 +68,31 @@ namespace OdaMeClone.Models
         public Apartment()
             {
             ApartmentPhotos = new List<byte[]>();
-            PackagesList = new List<Package>();
-            ApartmentAddOns = new List<ApartmentAddOn>();
+            AvailablePackages = new List<Package>();
+            AvailableApartmentAddOns = new List<ApartmentAddOn>();
 
             }
         public decimal CalculateTotalPrice()
             {
             // Apply discounts, taxes, or other adjustments here if needed
             // Calculate based on the related ApartmentAddOns
-            return (AssignedPackage?.Price ?? 0) + (ApartmentAddOns?.Sum(a => a.AddOn.PricePerUnit * a.InstalledUnits) ?? 0);
+            return (AssignedPackage?.Price ?? 0) + (AvailableApartmentAddOns?.Sum(a => a.AddOn.PricePerUnit * a.InstalledUnits) ?? 0);
             }
 
 
         // Method to add a package
         public void AddPackage(Package package)
             {
-            if (PackagesList == null)
-                PackagesList = new List<Package>();
+            if (AvailablePackages == null)
+                AvailablePackages = new List<Package>();
 
-            PackagesList.Add(package);
+            AvailablePackages.Add(package);
             }
 
         // Method to remove a package
         public void RemovePackage(Package package)
             {
-            PackagesList?.Remove(package);
+            AvailablePackages?.Remove(package);
             }
 
         // Method to calculate the total price
@@ -100,11 +100,11 @@ namespace OdaMeClone.Models
         // Method to validate addon selections
         public bool ValidateAddons()
             {
-            foreach (var addon in AssignedAddons)
+            foreach (var addon in AssignedApartmentAddOns)
                 {
-                if (addon.InstalledUnits > addon.MaxUnits)
+                if (addon.InstalledUnits > addon.AddOn.MaxUnits) // AddOn property contains MaxUnits
                     {
-                    throw new InvalidOperationException($"Addon {addon.AddOnName} exceeds the maximum allowed units.");
+                    throw new InvalidOperationException($"Addon {addon.AddOn.AddOnName} exceeds the maximum allowed units.");
                     }
                 }
             return true;
@@ -118,13 +118,13 @@ namespace OdaMeClone.Models
                 AssignedPackage.Price = newPackagePrice;
                 }
 
-            if (AssignedAddons != null)
+            if (AssignedApartmentAddOns != null)
                 {
-                foreach (var addon in AssignedAddons)
+                foreach (var addon in AssignedApartmentAddOns)
                     {
                     if (addonPrices.ContainsKey(addon.AddOnId))
                         {
-                        addon.PricePerUnit = addonPrices[addon.AddOnId];
+                        addon.AddOn.PricePerUnit = addonPrices[addon.AddOnId];
                         }
                     }
                 }

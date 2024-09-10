@@ -10,10 +10,13 @@ namespace OdaMeClone.Services
     public class BookingService
         {
         private readonly IBookingRepository _bookingRepository;
+        private readonly IApartmentRepository _apartmentRepository;
 
-        public BookingService(IBookingRepository bookingRepository)
+
+        public BookingService(IBookingRepository bookingRepository, IApartmentRepository apartmentRepository)
             {
             _bookingRepository = bookingRepository;
+            _apartmentRepository = apartmentRepository;
             }
 
         public IEnumerable<BookingDTO> GetAllBookings()
@@ -73,6 +76,23 @@ namespace OdaMeClone.Services
 
         public void AddBooking(BookingDTO bookingDTO)
             {
+            var apartment = _apartmentRepository.GetById(bookingDTO.ApartmentId);
+            if (apartment == null)
+                {
+                throw new KeyNotFoundException("Apartment not found");
+                }
+
+            // Validate the selected package and add-ons
+            if (!apartment.AvailablePackages.Any(p => p.PackageId == bookingDTO.PackageId))
+                {
+                throw new InvalidOperationException("Selected package is not available for this apartment.");
+                }
+
+            if (bookingDTO.AddOnIds.Any(a => !apartment.AvailableApartmentAddOns.Any(ao => ao.AddOnId == a)))
+                {
+                throw new InvalidOperationException("Some of the selected add-ons are not available for this apartment.");
+                }
+
             var booking = new Booking
                 {
                 BookingId = Guid.NewGuid(),
@@ -102,6 +122,22 @@ namespace OdaMeClone.Services
             _bookingRepository.Update(booking);
             }
 
+        public bool IsValidApartment(Guid apartmentId)
+            {
+            var apartment = _apartmentRepository.GetById(apartmentId);
+            return apartment != null;
+            }
+
+        public bool IsValidPackage(Guid apartmentId, Guid packageId)
+            {
+            var apartment = _apartmentRepository.GetById(apartmentId);
+            return apartment.AvailablePackages.Any(p => p.PackageId == packageId);
+            }
+        public bool AreValidAddOns(Guid apartmentId, List<Guid> addOnIds)
+            {
+            var apartment = _apartmentRepository.GetById(apartmentId);
+            return addOnIds.All(addOnId => apartment.AvailableApartmentAddOns.Any(ao => ao.AddOnId == addOnId));
+            }
         public void DeleteBooking(Guid id)
             {
             var booking = _bookingRepository.GetById(id);

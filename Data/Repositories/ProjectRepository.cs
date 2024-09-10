@@ -14,6 +14,7 @@ namespace OdaMeClone.Data.Repositories
         void Add(Project project);
         void Update(Project project);
         void Delete(Project project);
+        bool Exists(Guid projectId);  // Define Exists method
         }
 
     public class ProjectRepository : IProjectRepository
@@ -55,6 +56,11 @@ namespace OdaMeClone.Data.Repositories
             {
             _context.Projects.Remove(project);
             _context.SaveChanges();
+            }
+
+        public bool Exists(Guid projectId)
+            {
+            return _context.Projects.Any(p => p.ProjectId == projectId);
             }
         }
     }

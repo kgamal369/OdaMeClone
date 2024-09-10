@@ -10,10 +10,13 @@ namespace OdaMeClone.Services
     public class ApartmentService
         {
         private readonly IApartmentRepository _apartmentRepository;
+        private readonly IProjectRepository _projectRepository;
 
-        public ApartmentService(IApartmentRepository apartmentRepository)
+
+        public ApartmentService(IApartmentRepository apartmentRepository, IProjectRepository projectRepository)
             {
             _apartmentRepository = apartmentRepository;
+            _projectRepository = projectRepository;
             }
 
         public IEnumerable<ApartmentDTO> GetAllApartments()
@@ -27,13 +30,13 @@ namespace OdaMeClone.Services
                 Space = a.Space,
                 Description = a.Description,
                 ApartmentPhotos = a.ApartmentPhotos,
-                PackageIds = a.PackagesList.Select(p => p.PackageId).ToList(),
-                AddOnIds = a.AssignedAddons.Select(ad => ad.AddOnId).ToList(),
+                PackageIds = a.AvailablePackages.Select(p => p.PackageId).ToList(),
+                AddOnIds = a.AvailableApartmentAddOns.Select(ad => ad.AddOnId).ToList(),
                 CustomerId = a.CustomerId,
                 ApartmentStatus = a.ApartmentStatus,
                 ProjectId = a.ProjectId,
                 AssignedPackageId = a.AssignedPackageId,
-                ApartmentAddOns = a.ApartmentAddOns.Select(ao => new ApartmentAddOnDTO
+                ApartmentAddOns = a.AssignedApartmentAddOns.Select(ao => new ApartmentAddOnDTO
                     {
                     AddOnId = ao.AddOnId,
                     InstalledUnits = ao.InstalledUnits
@@ -61,13 +64,13 @@ namespace OdaMeClone.Services
                 Space = apartment.Space,
                 Description = apartment.Description,
                 ApartmentPhotos = apartment.ApartmentPhotos,
-                PackageIds = apartment.PackagesList.Select(p => p.PackageId).ToList(),
-                AddOnIds = apartment.AssignedAddons.Select(ad => ad.AddOnId).ToList(),
+                PackageIds = apartment.AvailablePackages.Select(p => p.PackageId).ToList(),
+                AddOnIds = apartment.AvailableApartmentAddOns.Select(ad => ad.AddOnId).ToList(),
                 CustomerId = apartment.CustomerId,
                 ApartmentStatus = apartment.ApartmentStatus,
                 ProjectId = apartment.ProjectId,
                 AssignedPackageId = apartment.AssignedPackageId,
-                ApartmentAddOns = apartment.ApartmentAddOns.Select(ao => new ApartmentAddOnDTO
+                ApartmentAddOns = apartment.AssignedApartmentAddOns.Select(ao => new ApartmentAddOnDTO
                     {
                     AddOnId = ao.AddOnId,
                     InstalledUnits = ao.InstalledUnits
@@ -156,6 +159,11 @@ namespace OdaMeClone.Services
                 }
 
             _apartmentRepository.Delete(apartment);
+            }
+
+        public bool IsValidProject(Guid projectId)
+            {
+            return _projectRepository.Exists(projectId);
             }
         }
     }

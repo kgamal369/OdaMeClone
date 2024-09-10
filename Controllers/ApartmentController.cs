@@ -53,6 +53,11 @@ namespace OdaMeClone.Controllers
                 {
                 return BadRequest("Invalid apartment data.");
                 }
+            // Ensure the apartment is assigned to a valid existing project
+            if (!_apartmentService.IsValidProject(apartmentDTO.ProjectId))
+                {
+                return BadRequest("The specified project does not exist.");
+                }
 
             _apartmentService.AddApartment(apartmentDTO);
             return CreatedAtAction(nameof(GetApartmentById), new { id = apartmentDTO.ApartmentId }, apartmentDTO);

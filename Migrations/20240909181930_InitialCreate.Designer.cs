@@ -13,7 +13,7 @@ using OdaMeClone.Data;
 namespace OdaMeClone.Migrations
 {
     [DbContext(typeof(OdaDbContext))]
-    [Migration("20240908195252_InitialCreate")]
+    [Migration("20240909181930_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -41,9 +41,6 @@ namespace OdaMeClone.Migrations
                     b.Property<int>("AddOnType")
                         .HasColumnType("integer");
 
-                    b.Property<Guid?>("ApartmentId")
-                        .HasColumnType("uuid");
-
                     b.Property<int>("InstalledUnits")
                         .HasColumnType("integer");
 
@@ -54,8 +51,6 @@ namespace OdaMeClone.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("AddOnId");
-
-                    b.HasIndex("ApartmentId");
 
                     b.ToTable("AddOns", "OdaMeClone");
                 });
@@ -129,12 +124,17 @@ namespace OdaMeClone.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("ApartmentId1")
+                        .HasColumnType("uuid");
+
                     b.Property<int>("InstalledUnits")
                         .HasColumnType("integer");
 
                     b.HasKey("ApartmentId", "AddOnId");
 
                     b.HasIndex("AddOnId");
+
+                    b.HasIndex("ApartmentId1");
 
                     b.ToTable("ApartmentAddOns", "OdaMeClone");
                 });
@@ -453,13 +453,6 @@ namespace OdaMeClone.Migrations
                     b.ToTable("Users", "OdaMeClone");
                 });
 
-            modelBuilder.Entity("OdaMeClone.Models.AddOn", b =>
-                {
-                    b.HasOne("OdaMeClone.Models.Apartment", null)
-                        .WithMany("AssignedAddons")
-                        .HasForeignKey("ApartmentId");
-                });
-
             modelBuilder.Entity("OdaMeClone.Models.Apartment", b =>
                 {
                     b.HasOne("OdaMeClone.Models.Package", "AssignedPackage")
@@ -494,10 +487,14 @@ namespace OdaMeClone.Migrations
                         .IsRequired();
 
                     b.HasOne("OdaMeClone.Models.Apartment", "Apartment")
-                        .WithMany("ApartmentAddOns")
+                        .WithMany("AssignedApartmentAddOns")
                         .HasForeignKey("ApartmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("OdaMeClone.Models.Apartment", null)
+                        .WithMany("AvailableApartmentAddOns")
+                        .HasForeignKey("ApartmentId1");
 
                     b.Navigation("AddOn");
 
@@ -553,7 +550,7 @@ namespace OdaMeClone.Migrations
             modelBuilder.Entity("OdaMeClone.Models.Package", b =>
                 {
                     b.HasOne("OdaMeClone.Models.Apartment", null)
-                        .WithMany("PackagesList")
+                        .WithMany("AvailablePackages")
                         .HasForeignKey("ApartmentId");
                 });
 
@@ -612,11 +609,11 @@ namespace OdaMeClone.Migrations
 
             modelBuilder.Entity("OdaMeClone.Models.Apartment", b =>
                 {
-                    b.Navigation("ApartmentAddOns");
+                    b.Navigation("AssignedApartmentAddOns");
 
-                    b.Navigation("AssignedAddons");
+                    b.Navigation("AvailableApartmentAddOns");
 
-                    b.Navigation("PackagesList");
+                    b.Navigation("AvailablePackages");
                 });
 
             modelBuilder.Entity("OdaMeClone.Models.Booking", b =>
