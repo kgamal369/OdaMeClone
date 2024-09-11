@@ -89,8 +89,8 @@ namespace OdaMeClone.Controllers
             }
 
 
-        [HttpPost("assign-apartment-to-project")]
-        public async Task<IActionResult> AssignedApartmentToProject([FromBody] Guid apartmentId, [FromBody] Guid projectId)
+        [HttpPost("assign-apartment-to-project/{projectId}")]
+        public async Task<IActionResult> AssignedApartmentToProject([FromRoute] Guid projectId, [FromBody] Guid apartmentId)
             {
             try
                 {
@@ -118,9 +118,8 @@ namespace OdaMeClone.Controllers
                 }
             }
 
-
-        [HttpPost("deassign-apartment-to-project")]
-        public async Task<IActionResult> DeAssignedApartmentToProject([FromBody] Guid apartmentId, [FromBody] Guid projectId)
+        [HttpPost("deassign-apartment-from-project/{projectId}")]
+        public async Task<IActionResult> DeAssignedApartmentFromProject([FromRoute] Guid projectId, [FromBody] Guid apartmentId)
             {
             try
                 {
@@ -139,15 +138,14 @@ namespace OdaMeClone.Controllers
                 projectEntity.RemoveApartment(apartment);
                 _projectService.UpdateProject(projectEntity);
 
-                return Ok("Apartment successfully assigned to project.");
+                return Ok("Apartment successfully de-assigned from project.");
                 }
             catch (Exception ex)
                 {
-                _logger.LogError(ex, "Error while assigning apartment to project.");
+                _logger.LogError(ex, "Error while de-assigning apartment from project.");
                 return StatusCode(500, "An error occurred while processing your request.");
                 }
             }
-
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateProject(Guid id, Project projectDTO)
