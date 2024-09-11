@@ -16,21 +16,21 @@ namespace OdaMeClone.Services
             _customerRepository = customerRepository;
             }
 
-        public IEnumerable<CustomerDTO> GetAllCustomers()
+        public IEnumerable<Customer> GetAllCustomers()
             {
             var customers = _customerRepository.GetAll();
-            return customers.Select(c => new CustomerDTO
+            return customers.Select(c => new Customer
                 {
                 CustomerId = c.CustomerId,
                 Name = c.Name,
                 Email = c.Email,
                 ContactNumber = c.ContactNumber,
-                LinkedApartmentIds = c.LinkedApartments.Select(a => a.ApartmentId).ToList(),
-                LinkedInvoiceIds = c.LinkedInvoices.Select(i => i.InvoiceId).ToList()
+                LinkedApartments = (ICollection<Apartment>)c.LinkedApartments.Select(a => a.ApartmentId).ToList(),
+                LinkedInvoices = (ICollection<Invoice>)c.LinkedInvoices.Select(i => i.InvoiceId).ToList()
                 });
             }
 
-        public CustomerDTO GetCustomerById(Guid id)
+        public Customer GetCustomerById(Guid id)
             {
             var customer = _customerRepository.GetById(id);
             if (customer == null)
@@ -38,31 +38,31 @@ namespace OdaMeClone.Services
                 throw new KeyNotFoundException("Customer not found");
                 }
 
-            return new CustomerDTO
+            return new Customer
                 {
                 CustomerId = customer.CustomerId,
                 Name = customer.Name,
                 Email = customer.Email,
                 ContactNumber = customer.ContactNumber,
-                LinkedApartmentIds = customer.LinkedApartments.Select(a => a.ApartmentId).ToList(),
-                LinkedInvoiceIds = customer.LinkedInvoices.Select(i => i.InvoiceId).ToList()
+                LinkedApartments = (ICollection<Apartment>)customer.LinkedApartments.Select(a => a.ApartmentId).ToList(),
+                LinkedInvoices = (ICollection<Invoice>)customer.LinkedInvoices.Select(i => i.InvoiceId).ToList()
                 };
             }
 
-        public void AddCustomer(CustomerDTO customerDTO)
+        public void AddCustomer(Customer Customer)
             {
             var customer = new Customer
                 {
                 CustomerId = Guid.NewGuid(),
-                Name = customerDTO.Name,
-                Email = customerDTO.Email,
-                ContactNumber = customerDTO.ContactNumber
+                Name = Customer.Name,
+                Email = Customer.Email,
+                ContactNumber = Customer.ContactNumber
                 };
 
             _customerRepository.Add(customer);
             }
 
-        public void UpdateCustomer(Guid id, CustomerDTO customerDTO)
+        public void UpdateCustomer(Guid id, Customer Customer)
             {
             var customer = _customerRepository.GetById(id);
             if (customer == null)
@@ -70,9 +70,9 @@ namespace OdaMeClone.Services
                 throw new KeyNotFoundException("Customer not found");
                 }
 
-            customer.Name = customerDTO.Name;
-            customer.Email = customerDTO.Email;
-            customer.ContactNumber = customerDTO.ContactNumber;
+            customer.Name = Customer.Name;
+            customer.Email = Customer.Email;
+            customer.ContactNumber = Customer.ContactNumber;
 
             _customerRepository.Update(customer);
             }

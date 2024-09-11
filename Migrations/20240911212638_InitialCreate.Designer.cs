@@ -13,7 +13,7 @@ using OdaMeClone.Data;
 namespace OdaMeClone.Migrations
 {
     [DbContext(typeof(OdaDbContext))]
-    [Migration("20240909181930_InitialCreate")]
+    [Migration("20240911212638_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

@@ -15,10 +15,10 @@ namespace OdaMeClone.Services
             _packageRepository = packageRepository;
             }
 
-        public IEnumerable<PackageDTO> GetAllPackages()
+        public IEnumerable<Package> GetAllPackages()
             {
             var packages = _packageRepository.GetAll();
-            return packages.Select(p => new PackageDTO
+            return packages.Select(p => new Package
                 {
                 PackageId = p.PackageId,
                 PackageName = p.PackageName,
@@ -27,7 +27,7 @@ namespace OdaMeClone.Services
                 });
             }
 
-        public PackageDTO GetPackageById(Guid id)
+        public Package GetPackageById(Guid id)
             {
             var package = _packageRepository.GetById(id);
             if (package == null)
@@ -35,7 +35,7 @@ namespace OdaMeClone.Services
                 throw new KeyNotFoundException("Package not found");
                 }
 
-            return new PackageDTO
+            return new Package
                 {
                 PackageId = package.PackageId,
                 PackageName = package.PackageName,
@@ -44,20 +44,20 @@ namespace OdaMeClone.Services
                 };
             }
 
-        public void AddPackage(PackageDTO packageDTO)
+        public void AddPackage(Package Package)
             {
             var package = new Package
                 {
                 PackageId = Guid.NewGuid(),
-                PackageName = packageDTO.PackageName,
-                PackageType = packageDTO.PackageType,
-                Price = packageDTO.Price
+                PackageName = Package.PackageName,
+                PackageType = Package.PackageType,
+                Price = Package.Price
                 };
 
             _packageRepository.Add(package);
             }
 
-        public void UpdatePackage(Guid id, PackageDTO packageDTO)
+        public void UpdatePackage(Guid id, Package Package)
             {
             var package = _packageRepository.GetById(id);
             if (package == null)
@@ -65,9 +65,9 @@ namespace OdaMeClone.Services
                 throw new KeyNotFoundException("Package not found");
                 }
 
-            package.PackageName = packageDTO.PackageName;
-            package.PackageType = packageDTO.PackageType;
-            package.Price = packageDTO.Price;
+            package.PackageName = Package.PackageName;
+            package.PackageType = Package.PackageType;
+            package.Price = Package.Price;
 
             _packageRepository.Update(package);
             }

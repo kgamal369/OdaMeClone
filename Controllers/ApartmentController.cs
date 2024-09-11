@@ -1,20 +1,26 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using OdaMeClone.Data;
 using OdaMeClone.Dtos.Projects;
+using OdaMeClone.Models;
 using OdaMeClone.Services;
 
 namespace OdaMeClone.Controllers
     {
-    [Route("api/[controller]")]
+    [Route("api/Apartments")]
     [ApiController]
     public class ApartmentController : ControllerBase
         {
         private readonly ApartmentService _apartmentService;
+        private readonly OdaDbContext _context; // Declare OdaDbContext
+        private readonly ILogger<ProjectController> _logger;
 
-        public ApartmentController(ApartmentService apartmentService)
+        public ApartmentController(ApartmentService apartmentService, ILogger<ProjectController> logger, OdaDbContext context)
             {
             _apartmentService = apartmentService;
+            _logger = logger;
+            _context = context;
             }
 
         [HttpGet]
@@ -47,7 +53,7 @@ namespace OdaMeClone.Controllers
             }
 
         [HttpPost]
-        public ActionResult AddApartment(ApartmentDTO apartmentDTO)
+        public ActionResult AddApartment(Apartment apartmentDTO)
             {
             if (apartmentDTO == null || !ModelState.IsValid)
                 {
@@ -64,7 +70,7 @@ namespace OdaMeClone.Controllers
             }
 
         [HttpPut("{id}")]
-        public ActionResult UpdateApartment(Guid id, ApartmentDTO apartmentDTO)
+        public ActionResult UpdateApartment(Guid id, Apartment apartmentDTO)
             {
             if (apartmentDTO == null || !ModelState.IsValid)
                 {

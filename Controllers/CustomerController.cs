@@ -1,11 +1,12 @@
 using System;
 using Microsoft.AspNetCore.Mvc;
 using OdaMeClone.Dtos.Projects;
+using OdaMeClone.Models;
 using OdaMeClone.Services;
 
 namespace OdaMeClone.Controllers
     {
-    [Route("api/[controller]")]
+    [Route("api/Customers")]
     [ApiController]
     public class CustomerController : ControllerBase
         {
@@ -38,7 +39,7 @@ namespace OdaMeClone.Controllers
             }
 
         [HttpPost]
-        public IActionResult AddCustomer([FromBody] CustomerDTO customerDTO)
+        public IActionResult AddCustomer([FromBody] Customer customerDTO)
             {
             if (customerDTO == null)
                 {
@@ -50,7 +51,7 @@ namespace OdaMeClone.Controllers
             }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateCustomer(Guid id, [FromBody] CustomerDTO customerDTO)
+        public IActionResult UpdateCustomer(Guid id, [FromBody] Customer customerDTO)
             {
             try
                 {

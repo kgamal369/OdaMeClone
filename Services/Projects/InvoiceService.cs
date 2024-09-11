@@ -16,10 +16,10 @@ namespace OdaMeClone.Services
             _invoiceRepository = invoiceRepository;
             }
 
-        public IEnumerable<InvoiceDTO> GetAllInvoices()
+        public IEnumerable<Invoice> GetAllInvoices()
             {
             var invoices = _invoiceRepository.GetAll();
-            return invoices.Select(i => new InvoiceDTO
+            return invoices.Select(i => new Invoice
                 {
                 InvoiceId = i.InvoiceId,
                 CustomerId = i.CustomerId,
@@ -35,7 +35,7 @@ namespace OdaMeClone.Services
                 });
             }
 
-        public InvoiceDTO GetInvoiceById(Guid id)
+        public Invoice GetInvoiceById(Guid id)
             {
             var invoice = _invoiceRepository.GetById(id);
             if (invoice == null)
@@ -43,7 +43,7 @@ namespace OdaMeClone.Services
                 throw new KeyNotFoundException("Invoice not found");
                 }
 
-            return new InvoiceDTO
+            return new Invoice
                 {
                 InvoiceId = invoice.InvoiceId,
                 CustomerId = invoice.CustomerId,
@@ -59,27 +59,27 @@ namespace OdaMeClone.Services
                 };
             }
 
-        public void AddInvoice(InvoiceDTO invoiceDTO)
+        public void AddInvoice(Invoice Invoice)
             {
             var invoice = new Invoice
                 {
                 InvoiceId = Guid.NewGuid(),
-                CustomerId = invoiceDTO.CustomerId,
-                ApartmentId = invoiceDTO.ApartmentId,
-                BookingId = invoiceDTO.BookingId,
-                Amount = invoiceDTO.Amount,
-                PaymentMethod = invoiceDTO.PaymentMethod,
+                CustomerId = Invoice.CustomerId,
+                ApartmentId = Invoice.ApartmentId,
+                BookingId = Invoice.BookingId,
+                Amount = Invoice.Amount,
+                PaymentMethod = Invoice.PaymentMethod,
                 CreatedDateTime = DateTime.Now,
                 InvoiceStatus = InvoiceStatus.Pending,
-                DueDate = invoiceDTO.DueDate,
-                PaymentDate = invoiceDTO.PaymentDate,
-                PaymentStatus = invoiceDTO.PaymentStatus
+                DueDate = Invoice.DueDate,
+                PaymentDate = Invoice.PaymentDate,
+                PaymentStatus = Invoice.PaymentStatus
                 };
 
             _invoiceRepository.Add(invoice);
             }
 
-        public void UpdateInvoice(Guid id, InvoiceDTO invoiceDTO)
+        public void UpdateInvoice(Guid id, Invoice Invoice)
             {
             var invoice = _invoiceRepository.GetById(id);
             if (invoice == null)
@@ -87,12 +87,12 @@ namespace OdaMeClone.Services
                 throw new KeyNotFoundException("Invoice not found");
                 }
 
-            invoice.Amount = invoiceDTO.Amount;
-            invoice.PaymentMethod = invoiceDTO.PaymentMethod;
-            invoice.InvoiceStatus = invoiceDTO.InvoiceStatus;
-            invoice.DueDate = invoiceDTO.DueDate;
-            invoice.PaymentDate = invoiceDTO.PaymentDate;
-            invoice.PaymentStatus = invoiceDTO.PaymentStatus;
+            invoice.Amount = Invoice.Amount;
+            invoice.PaymentMethod = Invoice.PaymentMethod;
+            invoice.InvoiceStatus = Invoice.InvoiceStatus;
+            invoice.DueDate = Invoice.DueDate;
+            invoice.PaymentDate = Invoice.PaymentDate;
+            invoice.PaymentStatus = Invoice.PaymentStatus;
 
             _invoiceRepository.Update(invoice);
             }

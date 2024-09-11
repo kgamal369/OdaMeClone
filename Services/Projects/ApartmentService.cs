@@ -12,7 +12,6 @@ namespace OdaMeClone.Services
         private readonly IApartmentRepository _apartmentRepository;
         private readonly IProjectRepository _projectRepository;
 
-
         public ApartmentService(IApartmentRepository apartmentRepository, IProjectRepository projectRepository)
             {
             _apartmentRepository = apartmentRepository;
@@ -48,7 +47,7 @@ namespace OdaMeClone.Services
                 });
             }
 
-        public ApartmentDTO GetApartmentById(Guid apartmentId)
+        public Apartment GetApartmentById(Guid apartmentId)
             {
             var apartment = _apartmentRepository.GetById(apartmentId);
             if (apartment == null)
@@ -56,7 +55,7 @@ namespace OdaMeClone.Services
                 throw new KeyNotFoundException("Apartment not found");
                 }
 
-            return new ApartmentDTO
+            return new Apartment
                 {
                 ApartmentId = apartment.ApartmentId,
                 ApartmentName = apartment.ApartmentName,
@@ -64,13 +63,13 @@ namespace OdaMeClone.Services
                 Space = apartment.Space,
                 Description = apartment.Description,
                 ApartmentPhotos = apartment.ApartmentPhotos,
-                PackageIds = apartment.AvailablePackages.Select(p => p.PackageId).ToList(),
-                AddOnIds = apartment.AvailableApartmentAddOns.Select(ad => ad.AddOnId).ToList(),
+                AvailablePackages = (ICollection<Package>)apartment.AvailablePackages.Select(p => p.PackageId).ToList(),
+                AvailableApartmentAddOns = (ICollection<ApartmentAddOn>)apartment.AvailableApartmentAddOns.Select(ad => ad.AddOnId).ToList(),
                 CustomerId = apartment.CustomerId,
                 ApartmentStatus = apartment.ApartmentStatus,
                 ProjectId = apartment.ProjectId,
                 AssignedPackageId = apartment.AssignedPackageId,
-                ApartmentAddOns = apartment.AssignedApartmentAddOns.Select(ao => new ApartmentAddOnDTO
+                AssignedApartmentAddOns = (ICollection<ApartmentAddOn>)apartment.AssignedApartmentAddOns.Select(ao => new ApartmentAddOnDTO
                     {
                     AddOnId = ao.AddOnId,
                     InstalledUnits = ao.InstalledUnits
@@ -78,11 +77,11 @@ namespace OdaMeClone.Services
                 FloorNumber = apartment.FloorNumber,
                 ViewType = apartment.ViewType,
                 AvailabilityDate = apartment.AvailabilityDate,
-                TotalPrice = apartment.TotalPrice
+                //TotalPrice = apartment.TotalPrice
                 };
             }
 
-        public void AddApartment(ApartmentDTO apartmentDTO)
+        public void AddApartment(Apartment apartmentDTO)
             {
             // Validate ApartmentType enum
             if (!Enum.IsDefined(typeof(ApartmentType), apartmentDTO.ApartmentType))
@@ -115,7 +114,7 @@ namespace OdaMeClone.Services
             _apartmentRepository.Add(apartment);
             }
 
-        public void UpdateApartment(Guid apartmentId, ApartmentDTO apartmentDTO)
+        public void UpdateApartment(Guid apartmentId, Apartment apartmentDTO)
             {
             // Validate ApartmentType enum
             if (!Enum.IsDefined(typeof(ApartmentType), apartmentDTO.ApartmentType))

@@ -1,11 +1,12 @@
 using System;
 using Microsoft.AspNetCore.Mvc;
 using OdaMeClone.Dtos.Projects;
+using OdaMeClone.Models;
 using OdaMeClone.Services;
 
 namespace OdaMeClone.Controllers
     {
-    [Route("api/[controller]")]
+    [Route("api/Bookings")]
     [ApiController]
     public class BookingController : ControllerBase
         {
@@ -38,7 +39,7 @@ namespace OdaMeClone.Controllers
             }
 
         [HttpPost]
-        public IActionResult AddBooking([FromBody] BookingDTO bookingDTO)
+        public IActionResult AddBooking([FromBody] Booking bookingDTO)
             {
             if (bookingDTO == null || !ModelState.IsValid)
                 {
@@ -51,23 +52,13 @@ namespace OdaMeClone.Controllers
                 return BadRequest("Invalid apartment.");
                 }
 
-            if (!_bookingService.IsValidPackage(bookingDTO.ApartmentId, bookingDTO.PackageId))
-                {
-                return BadRequest("Selected package is not available for this apartment.");
-                }
-
-            if (!_bookingService.AreValidAddOns(bookingDTO.ApartmentId, bookingDTO.AddOnIds))
-                {
-                return BadRequest("Some of the selected add-ons are not available for this apartment.");
-                }
-
             // Proceed with booking
             _bookingService.AddBooking(bookingDTO);
             return CreatedAtAction(nameof(GetBookingById), new { id = bookingDTO.BookingId }, bookingDTO);
             }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateBooking(Guid id, [FromBody] BookingDTO bookingDTO)
+        public IActionResult UpdateBooking(Guid id, [FromBody] Booking bookingDTO)
             {
             try
                 {

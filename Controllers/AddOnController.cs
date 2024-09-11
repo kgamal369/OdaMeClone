@@ -1,11 +1,12 @@
 using System;
 using Microsoft.AspNetCore.Mvc;
 using OdaMeClone.Dtos.Projects;
+using OdaMeClone.Models;
 using OdaMeClone.Services;
 
 namespace OdaMeClone.Controllers
     {
-    [Route("api/[controller]")]
+    [Route("api/AddOns")]
     [ApiController]
     public class AddOnController : ControllerBase
         {
@@ -38,7 +39,7 @@ namespace OdaMeClone.Controllers
             }
 
         [HttpPost]
-        public IActionResult AddAddOn([FromBody] AddOnDTO addOnDTO)
+        public IActionResult AddAddOn([FromBody] AddOn addOnDTO)
             {
             if (addOnDTO == null)
                 {
@@ -50,7 +51,7 @@ namespace OdaMeClone.Controllers
             }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateAddOn(Guid id, [FromBody] AddOnDTO addOnDTO)
+        public IActionResult UpdateAddOn(Guid id, [FromBody] AddOn addOnDTO)
             {
             try
                 {

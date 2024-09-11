@@ -1,11 +1,12 @@
 using System;
 using Microsoft.AspNetCore.Mvc;
 using OdaMeClone.Dtos.Projects;
+using OdaMeClone.Models;
 using OdaMeClone.Services;
 
 namespace OdaMeClone.Controllers
     {
-    [Route("api/[controller]")]
+    [Route("api/Invoices")]
     [ApiController]
     public class InvoiceController : ControllerBase
         {
@@ -38,7 +39,7 @@ namespace OdaMeClone.Controllers
             }
 
         [HttpPost]
-        public IActionResult AddInvoice([FromBody] InvoiceDTO invoiceDTO)
+        public IActionResult AddInvoice([FromBody] Invoice invoiceDTO)
             {
             if (invoiceDTO == null)
                 {
@@ -50,7 +51,7 @@ namespace OdaMeClone.Controllers
             }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateInvoice(Guid id, [FromBody] InvoiceDTO invoiceDTO)
+        public IActionResult UpdateInvoice(Guid id, [FromBody] Invoice invoiceDTO)
             {
             try
                 {

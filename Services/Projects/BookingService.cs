@@ -11,18 +11,30 @@ namespace OdaMeClone.Services
         {
         private readonly IBookingRepository _bookingRepository;
         private readonly IApartmentRepository _apartmentRepository;
+        private readonly IPackageRepository _packageRepository;
+        private readonly IAddOnRepository _addOnRepository;
+        private readonly IApartmentAddOnRepository _apartmentAddOnRepository;
 
 
-        public BookingService(IBookingRepository bookingRepository, IApartmentRepository apartmentRepository)
+        public BookingService(
+            IBookingRepository bookingRepository,
+            IApartmentRepository apartmentRepository,
+            IPackageRepository packageRepository,
+            IAddOnRepository addOnRepository,
+            IApartmentAddOnRepository apartmentAddOnRepository
+            )
             {
             _bookingRepository = bookingRepository;
             _apartmentRepository = apartmentRepository;
+            _packageRepository = packageRepository;
+            _addOnRepository = addOnRepository;
+            _apartmentAddOnRepository = _apartmentAddOnRepository;
             }
 
-        public IEnumerable<BookingDTO> GetAllBookings()
+        public IEnumerable<Booking> GetAllBookings()
             {
             var bookings = _bookingRepository.GetAll();
-            return bookings.Select(b => new BookingDTO
+            return bookings.Select(b => new Booking
                 {
                 BookingId = b.BookingId,
                 CustomerId = b.CustomerId,
@@ -31,10 +43,8 @@ namespace OdaMeClone.Services
                 BookingStatus = b.BookingStatus,
                 LastModifiedDateTime = b.LastModifiedDateTime,
                 AssignedPerson = b.AssignedPerson,
-                RemainingAmount = b.RemainingAmount,
-                TotalAmount = b.TotalAmount,
                 PaymentMethod = b.PaymentMethod,
-                Invoices = b.Invoices.Select(i => new InvoiceDTO
+                Invoices = (ICollection<Invoice>)b.Invoices.Select(i => new InvoiceDTO
                     {
                     InvoiceId = i.InvoiceId,
                     Amount = i.Amount,
@@ -44,7 +54,7 @@ namespace OdaMeClone.Services
                 });
             }
 
-        public BookingDTO GetBookingById(Guid id)
+        public Booking GetBookingById(Guid id)
             {
             var booking = _bookingRepository.GetById(id);
             if (booking == null)
@@ -52,7 +62,7 @@ namespace OdaMeClone.Services
                 throw new KeyNotFoundException("Booking not found");
                 }
 
-            return new BookingDTO
+            return new Booking
                 {
                 BookingId = booking.BookingId,
                 CustomerId = booking.CustomerId,
@@ -61,10 +71,8 @@ namespace OdaMeClone.Services
                 BookingStatus = booking.BookingStatus,
                 LastModifiedDateTime = booking.LastModifiedDateTime,
                 AssignedPerson = booking.AssignedPerson,
-                RemainingAmount = booking.RemainingAmount,
-                TotalAmount = booking.TotalAmount,
                 PaymentMethod = booking.PaymentMethod,
-                Invoices = booking.Invoices.Select(i => new InvoiceDTO
+                Invoices = booking.Invoices.Select(i => new Invoice
                     {
                     InvoiceId = i.InvoiceId,
                     Amount = i.Amount,
@@ -74,40 +82,72 @@ namespace OdaMeClone.Services
                 };
             }
 
-        public void AddBooking(BookingDTO bookingDTO)
+        public void AddBooking(Booking bookingDTO)
             {
-            var apartment = _apartmentRepository.GetById(bookingDTO.ApartmentId);
-            if (apartment == null)
+            var originalApartment = _apartmentRepository.GetById(bookingDTO.ApartmentId);
+            if (originalApartment == null)
                 {
                 throw new KeyNotFoundException("Apartment not found");
                 }
 
-            // Validate the selected package and add-ons
-            if (!apartment.AvailablePackages.Any(p => p.PackageId == bookingDTO.PackageId))
+            // Create a new copy of the apartment with status "InProgress"
+            var newApartment = new Apartment
+                {
+                ApartmentId = Guid.NewGuid(),
+                ApartmentName = originalApartment.ApartmentName,
+                ApartmentType = originalApartment.ApartmentType,
+                Space = originalApartment.Space,
+                Description = originalApartment.Description,
+                ProjectId = originalApartment.ProjectId,
+                ApartmentStatus = ApartmentStatus.InProgress, // New status
+                AssignedApartmentAddOns = new List<ApartmentAddOn>(),
+                AssignedPackage = null // Will be set later
+                };
+
+            // Assign selected package (required)
+            var selectedPackage = _packageRepository.GetById(bookingDTO.Apartment.AssignedPackage.PackageId);
+            if (selectedPackage == null)
                 {
                 throw new InvalidOperationException("Selected package is not available for this apartment.");
                 }
+            newApartment.AssignedPackage = selectedPackage;
 
-            if (bookingDTO.AddOnIds.Any(a => !apartment.AvailableApartmentAddOns.Any(ao => ao.AddOnId == a)))
+            // Assign selected add-ons (optional)
+            foreach (var addOn in bookingDTO.Apartment.AssignedApartmentAddOns)
                 {
-                throw new InvalidOperationException("Some of the selected add-ons are not available for this apartment.");
+                var selectedAddOn = _addOnRepository.GetById(addOn.AddOnId);
+                if (selectedAddOn == null)
+                    {
+                    throw new InvalidOperationException($"Selected add-on {addOn.AddOnId} is not available.");
+                    }
+
+                newApartment.AssignedApartmentAddOns.Add(new ApartmentAddOn
+                    {
+                    AddOnId = selectedAddOn.AddOnId,
+                    InstalledUnits = addOn.InstalledUnits,
+                    AddOn = selectedAddOn
+                    });
                 }
 
-            var booking = new Booking
+            // Save the new apartment
+            _apartmentRepository.Add(newApartment);
+
+            // Create the booking with the new apartment
+            var newBooking = new Booking
                 {
                 BookingId = Guid.NewGuid(),
                 CustomerId = bookingDTO.CustomerId,
-                ApartmentId = bookingDTO.ApartmentId,
+                ApartmentId = newApartment.ApartmentId, // Link to the new apartment
                 CreatedDateTime = DateTime.Now,
                 BookingStatus = BookingStatus.Pending,
                 AssignedPerson = bookingDTO.AssignedPerson,
                 PaymentMethod = bookingDTO.PaymentMethod
                 };
 
-            _bookingRepository.Add(booking);
+            _bookingRepository.Add(newBooking);
             }
 
-        public void UpdateBooking(Guid id, BookingDTO bookingDTO)
+        public void UpdateBooking(Guid id, Booking Booking)
             {
             var booking = _bookingRepository.GetById(id);
             if (booking == null)
@@ -115,9 +155,9 @@ namespace OdaMeClone.Services
                 throw new KeyNotFoundException("Booking not found");
                 }
 
-            booking.BookingStatus = bookingDTO.BookingStatus;
+            booking.BookingStatus = Booking.BookingStatus;
             booking.LastModifiedDateTime = DateTime.Now;
-            booking.AssignedPerson = bookingDTO.AssignedPerson;
+            booking.AssignedPerson = Booking.AssignedPerson;
 
             _bookingRepository.Update(booking);
             }

@@ -1,11 +1,12 @@
 using System;
 using Microsoft.AspNetCore.Mvc;
 using OdaMeClone.Dtos.Projects;
+using OdaMeClone.Models;
 using OdaMeClone.Services;
 
 namespace OdaMeClone.Controllers
     {
-    [Route("api/[controller]")]
+    [Route("api/Payments")]
     [ApiController]
     public class PaymentController : ControllerBase
         {
@@ -38,7 +39,7 @@ namespace OdaMeClone.Controllers
             }
 
         [HttpPost]
-        public IActionResult AddPayment([FromBody] PaymentDTO paymentDTO)
+        public IActionResult AddPayment([FromBody] Payment paymentDTO)
             {
             if (paymentDTO == null)
                 {
@@ -50,7 +51,7 @@ namespace OdaMeClone.Controllers
             }
 
         [HttpPut("{id}")]
-        public IActionResult UpdatePayment(Guid id, [FromBody] PaymentDTO paymentDTO)
+        public IActionResult UpdatePayment(Guid id, [FromBody] Payment paymentDTO)
             {
             try
                 {

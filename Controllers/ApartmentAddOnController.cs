@@ -2,11 +2,12 @@ using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using OdaMeClone.Dtos.Projects;
+using OdaMeClone.Models;
 using OdaMeClone.Services;
 
 namespace OdaMeClone.Controllers
     {
-    [Route("api/[controller]")]
+    [Route("api/ApartmentAddOns")]
     [ApiController]
     public class ApartmentAddOnController : ControllerBase
         {
@@ -37,14 +38,14 @@ namespace OdaMeClone.Controllers
             }
 
         [HttpPost]
-        public ActionResult AddApartmentAddOn(ApartmentAddOnDTO apartmentAddOnDTO)
+        public ActionResult AddApartmentAddOn(ApartmentAddOn apartmentAddOnDTO)
             {
             _apartmentAddOnService.AddApartmentAddOn(apartmentAddOnDTO);
             return CreatedAtAction(nameof(GetApartmentAddOnById), new { apartmentId = apartmentAddOnDTO.ApartmentId, addOnId = apartmentAddOnDTO.AddOnId }, apartmentAddOnDTO);
             }
 
         [HttpPut("{apartmentId}/{addOnId}")]
-        public ActionResult UpdateApartmentAddOn(Guid apartmentId, Guid addOnId, ApartmentAddOnDTO apartmentAddOnDTO)
+        public ActionResult UpdateApartmentAddOn(Guid apartmentId, Guid addOnId, ApartmentAddOn apartmentAddOnDTO)
             {
             try
                 {

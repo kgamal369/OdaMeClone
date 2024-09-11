@@ -16,22 +16,21 @@ namespace OdaMeClone.Services
             _projectRepository = projectRepository;
             }
 
-        public IEnumerable<ProjectDTO> GetAllProjects()
+        public IEnumerable<Project> GetAllProjects()
             {
             var projects = _projectRepository.GetAll();
-            return projects.Select(p => new ProjectDTO
+            return projects.Select(p => new Project
                 {
                 ProjectId = p.ProjectId,
                 ProjectName = p.ProjectName,
                 Location = p.Location,
                 Amenities = p.Amenities,
-                TotalUnits = p.TotalUnits,
                 ProjectLogo = null, // Don't expose logo in DTO
-                ApartmentIds = p.Apartments.Select(a => a.ApartmentId).ToList()
+                Apartments = (ICollection<Apartment>)p.Apartments.Select(a => a.ApartmentId).ToList()
                 });
             }
 
-        public ProjectDTO GetProjectById(Guid id)
+        public Project GetProjectById(Guid id)
             {
             var project = _projectRepository.GetById(id);
             if (project == null)
@@ -39,19 +38,29 @@ namespace OdaMeClone.Services
                 throw new KeyNotFoundException("Project not found");
                 }
 
-            return new ProjectDTO
+            return new Project
                 {
                 ProjectId = project.ProjectId,
                 ProjectName = project.ProjectName,
                 Location = project.Location,
                 Amenities = project.Amenities,
-                TotalUnits = project.TotalUnits,
+                //TotalUnits = project.TotalUnits,
                 ProjectLogo = null, // Don't expose logo in DTO
-                ApartmentIds = project.Apartments.Select(a => a.ApartmentId).ToList()
+                Apartments = (ICollection<Apartment>)project.Apartments.Select(a => a.ApartmentId).ToList()
                 };
             }
 
-        public void AddProject(ProjectDTO projectDTO, byte[] logoBytes)
+        public Project GetProjectEntityById(Guid id)
+            {
+            var project = _projectRepository.GetById(id);
+            if (project == null)
+                {
+                throw new KeyNotFoundException("Project not found");
+                }
+            return project;
+            }
+
+        public void AddProject(Project projectDTO, byte[] logoBytes)
             {
             var project = new Project
                 {
@@ -64,7 +73,7 @@ namespace OdaMeClone.Services
             _projectRepository.Add(project);
             }
 
-        public void UpdateProject(Guid id, ProjectDTO projectDTO, byte[] logoBytes)
+        public void UpdateProject(Guid id, Project projectDTO, byte[] logoBytes)
             {
             var project = _projectRepository.GetById(id);
             if (project == null)
@@ -84,6 +93,11 @@ namespace OdaMeClone.Services
             _projectRepository.Update(project);
             }
 
+        public void UpdateProject(Project project)
+            {
+            _projectRepository.Update(project);
+            }
+
         public void DeleteProject(Guid id)
             {
             var project = _projectRepository.GetById(id);
@@ -94,6 +108,7 @@ namespace OdaMeClone.Services
 
             _projectRepository.Delete(project);
             }
+
         public bool IsValidProject(Guid projectId)
             {
             return _projectRepository.GetById(projectId) != null;

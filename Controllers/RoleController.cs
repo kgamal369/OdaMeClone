@@ -1,11 +1,12 @@
 using System;
 using Microsoft.AspNetCore.Mvc;
 using OdaMeClone.Dtos.Projects;
+using OdaMeClone.Models;
 using OdaMeClone.Services;
 
 namespace OdaMeClone.Controllers
     {
-    [Route("api/[controller]")]
+    [Route("api/Roles")]
     [ApiController]
     public class RoleController : ControllerBase
         {
@@ -38,7 +39,7 @@ namespace OdaMeClone.Controllers
             }
 
         [HttpPost]
-        public IActionResult AddRole([FromBody] RoleDTO roleDTO)
+        public IActionResult AddRole([FromBody] Role roleDTO)
             {
             if (roleDTO == null)
                 {
@@ -46,11 +47,11 @@ namespace OdaMeClone.Controllers
                 }
 
             _roleService.AddRole(roleDTO);
-            return CreatedAtAction(nameof(GetRoleById), new { id = roleDTO.Id }, roleDTO);
+            return CreatedAtAction(nameof(GetRoleById), new { id = roleDTO.RoleId }, roleDTO);
             }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateRole(int id, [FromBody] RoleDTO roleDTO)
+        public IActionResult UpdateRole(int id, [FromBody] Role roleDTO)
             {
             try
                 {

@@ -16,12 +16,12 @@ namespace OdaMeClone.Services
             _userRepository = userRepository;
             }
 
-        public IEnumerable<UserDTO> GetAllUsers()
+        public IEnumerable<User> GetAllUsers()
             {
             var users = _userRepository.GetAll();
-            return users.Select(u => new UserDTO
+            return users.Select(u => new User
                 {
-                Id = u.UserId,
+                UserId = u.UserId,
                 Username = u.Username,
                 Email = u.Email,
                 PhoneNumber = u.PhoneNumber,
@@ -35,7 +35,7 @@ namespace OdaMeClone.Services
                 });
             }
 
-        public UserDTO GetUserById(int id)
+        public User GetUserById(int id)
             {
             var user = _userRepository.GetById(id);
             if (user == null)
@@ -43,9 +43,9 @@ namespace OdaMeClone.Services
                 throw new KeyNotFoundException("User not found");
                 }
 
-            return new UserDTO
+            return new User
                 {
-                Id = user.UserId,
+                UserId = user.UserId,
                 Username = user.Username,
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
@@ -59,24 +59,24 @@ namespace OdaMeClone.Services
                 };
             }
 
-        public void AddUser(UserDTO userDTO, string passwordHash)
+        public void AddUser(User User, string passwordHash)
             {
             var user = new User
                 {
-                Username = userDTO.Username,
+                Username = User.Username,
                 PasswordHash = passwordHash,
-                Email = userDTO.Email,
-                PhoneNumber = userDTO.PhoneNumber,
-                RoleId = userDTO.RoleId,
+                Email = User.Email,
+                PhoneNumber = User.PhoneNumber,
+                RoleId = User.RoleId,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow,
-                TwoFactorEnabled = userDTO.TwoFactorEnabled
+                TwoFactorEnabled = User.TwoFactorEnabled
                 };
 
             _userRepository.Add(user);
             }
 
-        public void UpdateUser(int id, UserDTO userDTO)
+        public void UpdateUser(int id, User User)
             {
             var user = _userRepository.GetById(id);
             if (user == null)
@@ -84,12 +84,12 @@ namespace OdaMeClone.Services
                 throw new KeyNotFoundException("User not found");
                 }
 
-            user.Username = userDTO.Username;
-            user.Email = userDTO.Email;
-            user.PhoneNumber = userDTO.PhoneNumber;
-            user.RoleId = userDTO.RoleId;
+            user.Username = User.Username;
+            user.Email = User.Email;
+            user.PhoneNumber = User.PhoneNumber;
+            user.RoleId = User.RoleId;
             user.UpdatedAt = DateTime.UtcNow;
-            user.TwoFactorEnabled = userDTO.TwoFactorEnabled;
+            user.TwoFactorEnabled = User.TwoFactorEnabled;
 
             _userRepository.Update(user);
             }

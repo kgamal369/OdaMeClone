@@ -16,10 +16,10 @@ namespace OdaMeClone.Services
             _apartmentAddOnRepository = apartmentAddOnRepository;
             }
 
-        public IEnumerable<ApartmentAddOnDTO> GetAllApartmentAddOns()
+        public IEnumerable<ApartmentAddOn> GetAllApartmentAddOns()
             {
             var apartmentAddOns = _apartmentAddOnRepository.GetAll();
-            return apartmentAddOns.Select(aa => new ApartmentAddOnDTO
+            return apartmentAddOns.Select(aa => new ApartmentAddOn
                 {
                 ApartmentId = aa.ApartmentId,
                 AddOnId = aa.AddOnId,
@@ -27,7 +27,7 @@ namespace OdaMeClone.Services
                 });
             }
 
-        public ApartmentAddOnDTO GetApartmentAddOnById(Guid apartmentId, Guid addOnId)
+        public ApartmentAddOn GetApartmentAddOnById(Guid apartmentId, Guid addOnId)
             {
             var apartmentAddOn = _apartmentAddOnRepository.GetByIds(apartmentId, addOnId);
             if (apartmentAddOn == null)
@@ -35,7 +35,7 @@ namespace OdaMeClone.Services
                 throw new KeyNotFoundException("ApartmentAddOn not found");
                 }
 
-            return new ApartmentAddOnDTO
+            return new ApartmentAddOn
                 {
                 ApartmentId = apartmentAddOn.ApartmentId,
                 AddOnId = apartmentAddOn.AddOnId,
@@ -43,19 +43,19 @@ namespace OdaMeClone.Services
                 };
             }
 
-        public void AddApartmentAddOn(ApartmentAddOnDTO apartmentAddOnDTO)
+        public void AddApartmentAddOn(ApartmentAddOn ApartmentAddOn)
             {
             var apartmentAddOn = new ApartmentAddOn
                 {
-                ApartmentId = apartmentAddOnDTO.ApartmentId,
-                AddOnId = apartmentAddOnDTO.AddOnId,
-                InstalledUnits = apartmentAddOnDTO.InstalledUnits
+                ApartmentId = ApartmentAddOn.ApartmentId,
+                AddOnId = ApartmentAddOn.AddOnId,
+                InstalledUnits = ApartmentAddOn.InstalledUnits
                 };
 
             _apartmentAddOnRepository.Add(apartmentAddOn);
             }
 
-        public void UpdateApartmentAddOn(Guid apartmentId, Guid addOnId, ApartmentAddOnDTO apartmentAddOnDTO)
+        public void UpdateApartmentAddOn(Guid apartmentId, Guid addOnId, ApartmentAddOn ApartmentAddOn)
             {
             var apartmentAddOn = _apartmentAddOnRepository.GetByIds(apartmentId, addOnId);
             if (apartmentAddOn == null)
@@ -63,7 +63,7 @@ namespace OdaMeClone.Services
                 throw new KeyNotFoundException("ApartmentAddOn not found");
                 }
 
-            apartmentAddOn.InstalledUnits = apartmentAddOnDTO.InstalledUnits;
+            apartmentAddOn.InstalledUnits = ApartmentAddOn.InstalledUnits;
 
             _apartmentAddOnRepository.Update(apartmentAddOn);
             }

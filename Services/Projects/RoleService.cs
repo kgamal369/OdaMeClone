@@ -16,22 +16,22 @@ namespace OdaMeClone.Services
             _roleRepository = roleRepository;
             }
 
-        public IEnumerable<RoleDTO> GetAllRoles()
+        public IEnumerable<Role> GetAllRoles()
             {
             var roles = _roleRepository.GetAll();
-            return roles.Select(r => new RoleDTO
+            return roles.Select(r => new Role
                 {
-                Id = r.RoleId,
+                RoleId = r.RoleId,
                 Name = r.Name,
                 Description = r.Description,
                 CreatedAt = r.CreatedAt,
                 UpdatedAt = r.UpdatedAt,
-                UserIds = r.Users.Select(u => u.RoleId).ToList(),
-                RolePermissionIds = r.RolePermissions.Select(rp => rp.RoleId).ToList()
+                Users = (ICollection<User>)r.Users.Select(u => u.RoleId).ToList(),
+                RolePermissions = (ICollection<RolePermission>)r.RolePermissions.Select(rp => rp.RoleId).ToList()
                 });
             }
 
-        public RoleDTO GetRoleById(int id)
+        public Role GetRoleById(int id)
             {
             var role = _roleRepository.GetById(id);
             if (role == null)
@@ -39,24 +39,24 @@ namespace OdaMeClone.Services
                 throw new KeyNotFoundException("Role not found");
                 }
 
-            return new RoleDTO
+            return new Role
                 {
-                Id = role.RoleId,
+                RoleId = role.RoleId,
                 Name = role.Name,
                 Description = role.Description,
                 CreatedAt = role.CreatedAt,
                 UpdatedAt = role.UpdatedAt,
-                UserIds = role.Users.Select(u => u.RoleId).ToList(),
-                RolePermissionIds = role.RolePermissions.Select(rp => rp.RoleId).ToList()
+                Users = (ICollection<User>)role.Users.Select(u => u.RoleId).ToList(),
+                RolePermissions = (ICollection<RolePermission>)role.RolePermissions.Select(rp => rp.RoleId).ToList()
                 };
             }
 
-        public void AddRole(RoleDTO roleDTO)
+        public void AddRole(Role Role)
             {
             var role = new Role
                 {
-                Name = roleDTO.Name,
-                Description = roleDTO.Description,
+                Name = Role.Name,
+                Description = Role.Description,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
                 };
@@ -64,7 +64,7 @@ namespace OdaMeClone.Services
             _roleRepository.Add(role);
             }
 
-        public void UpdateRole(int id, RoleDTO roleDTO)
+        public void UpdateRole(int id, Role Role)
             {
             var role = _roleRepository.GetById(id);
             if (role == null)
@@ -72,8 +72,8 @@ namespace OdaMeClone.Services
                 throw new KeyNotFoundException("Role not found");
                 }
 
-            role.Name = roleDTO.Name;
-            role.Description = roleDTO.Description;
+            role.Name = Role.Name;
+            role.Description = Role.Description;
             role.UpdatedAt = DateTime.UtcNow;
 
             _roleRepository.Update(role);

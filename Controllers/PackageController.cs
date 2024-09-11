@@ -1,11 +1,12 @@
 using System;
 using Microsoft.AspNetCore.Mvc;
 using OdaMeClone.Dtos.Projects;
+using OdaMeClone.Models;
 using OdaMeClone.Services;
 
 namespace OdaMeClone.Controllers
     {
-    [Route("api/[controller]")]
+    [Route("api/Packages")]
     [ApiController]
     public class PackageController : ControllerBase
         {
@@ -38,7 +39,7 @@ namespace OdaMeClone.Controllers
             }
 
         [HttpPost]
-        public IActionResult AddPackage([FromBody] PackageDTO packageDTO)
+        public IActionResult AddPackage([FromBody] Package packageDTO)
             {
             if (packageDTO == null)
                 {
@@ -50,7 +51,7 @@ namespace OdaMeClone.Controllers
             }
 
         [HttpPut("{id}")]
-        public IActionResult UpdatePackage(Guid id, [FromBody] PackageDTO packageDTO)
+        public IActionResult UpdatePackage(Guid id, [FromBody] Package packageDTO)
             {
             try
                 {

@@ -1,11 +1,12 @@
 using System;
 using Microsoft.AspNetCore.Mvc;
 using OdaMeClone.Dtos.Projects;
+using OdaMeClone.Models;
 using OdaMeClone.Services;
 
 namespace OdaMeClone.Controllers
     {
-    [Route("api/[controller]")]
+    [Route("api/Users")]
     [ApiController]
     public class UserController : ControllerBase
         {
@@ -38,7 +39,7 @@ namespace OdaMeClone.Controllers
             }
 
         [HttpPost]
-        public IActionResult AddUser([FromBody] UserDTO userDTO, string passwordHash)
+        public IActionResult AddUser([FromBody] User userDTO, string passwordHash)
             {
             if (userDTO == null)
                 {
@@ -46,11 +47,11 @@ namespace OdaMeClone.Controllers
                 }
 
             _userService.AddUser(userDTO, passwordHash);
-            return CreatedAtAction(nameof(GetUserById), new { id = userDTO.Id }, userDTO);
+            return CreatedAtAction(nameof(GetUserById), new { id = userDTO.UserId }, userDTO);
             }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateUser(int id, [FromBody] UserDTO userDTO)
+        public IActionResult UpdateUser(int id, [FromBody] User userDTO)
             {
             try
                 {

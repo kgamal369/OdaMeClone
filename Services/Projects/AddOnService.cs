@@ -16,10 +16,10 @@ namespace OdaMeClone.Services
             _addOnRepository = addOnRepository;
             }
 
-        public IEnumerable<AddOnDTO> GetAllAddOns()
+        public IEnumerable<AddOn> GetAllAddOns()
             {
             var addOns = _addOnRepository.GetAll();
-            return addOns.Select(a => new AddOnDTO
+            return addOns.Select(a => new AddOn
                 {
                 AddOnId = a.AddOnId,
                 AddOnName = a.AddOnName,
@@ -30,7 +30,7 @@ namespace OdaMeClone.Services
                 });
             }
 
-        public AddOnDTO GetAddOnById(Guid id)
+        public AddOn GetAddOnById(Guid id)
             {
             var addOn = _addOnRepository.GetById(id);
             if (addOn == null)
@@ -38,7 +38,7 @@ namespace OdaMeClone.Services
                 throw new KeyNotFoundException("AddOn not found");
                 }
 
-            return new AddOnDTO
+            return new AddOn
                 {
                 AddOnId = addOn.AddOnId,
                 AddOnName = addOn.AddOnName,
@@ -49,22 +49,22 @@ namespace OdaMeClone.Services
                 };
             }
 
-        public void AddAddOn(AddOnDTO addOnDTO)
+        public void AddAddOn(AddOn AddOn)
             {
             var addOn = new AddOn
                 {
                 AddOnId = Guid.NewGuid(),
-                AddOnName = addOnDTO.AddOnName,
-                AddOnType = addOnDTO.AddOnType,
-                PricePerUnit = addOnDTO.PricePerUnit,
-                MaxUnits = addOnDTO.MaxUnits,
-                InstalledUnits = addOnDTO.InstalledUnits
+                AddOnName = AddOn.AddOnName,
+                AddOnType = AddOn.AddOnType,
+                PricePerUnit = AddOn.PricePerUnit,
+                MaxUnits = AddOn.MaxUnits,
+                InstalledUnits = AddOn.InstalledUnits
                 };
 
             _addOnRepository.Add(addOn);
             }
 
-        public void UpdateAddOn(Guid id, AddOnDTO addOnDTO)
+        public void UpdateAddOn(Guid id, AddOn AddOn)
             {
             var addOn = _addOnRepository.GetById(id);
             if (addOn == null)
@@ -72,11 +72,11 @@ namespace OdaMeClone.Services
                 throw new KeyNotFoundException("AddOn not found");
                 }
 
-            addOn.AddOnName = addOnDTO.AddOnName;
-            addOn.AddOnType = addOnDTO.AddOnType;
-            addOn.PricePerUnit = addOnDTO.PricePerUnit;
-            addOn.MaxUnits = addOnDTO.MaxUnits;
-            addOn.InstalledUnits = addOnDTO.InstalledUnits;
+            addOn.AddOnName = AddOn.AddOnName;
+            addOn.AddOnType = AddOn.AddOnType;
+            addOn.PricePerUnit = AddOn.PricePerUnit;
+            addOn.MaxUnits = AddOn.MaxUnits;
+            addOn.InstalledUnits = AddOn.InstalledUnits;
 
             _addOnRepository.Update(addOn);
             }

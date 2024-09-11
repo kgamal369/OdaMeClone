@@ -15,10 +15,10 @@ namespace OdaMeClone.Services
             _paymentRepository = paymentRepository;
             }
 
-        public IEnumerable<PaymentDTO> GetAllPayments()
+        public IEnumerable<Payment> GetAllPayments()
             {
             var payments = _paymentRepository.GetAll();
-            return payments.Select(p => new PaymentDTO
+            return payments.Select(p => new Payment
                 {
                 PaymentId = p.PaymentId,
                 CustomerId = p.CustomerId,
@@ -29,7 +29,7 @@ namespace OdaMeClone.Services
                 });
             }
 
-        public PaymentDTO GetPaymentById(Guid paymentId)
+        public Payment GetPaymentById(Guid paymentId)
             {
             var payment = _paymentRepository.GetById(paymentId);
             if (payment == null)
@@ -37,7 +37,7 @@ namespace OdaMeClone.Services
                 throw new KeyNotFoundException("Payment not found");
                 }
 
-            return new PaymentDTO
+            return new Payment
                 {
                 PaymentId = payment.PaymentId,
                 CustomerId = payment.CustomerId,
@@ -48,22 +48,22 @@ namespace OdaMeClone.Services
                 };
             }
 
-        public void AddPayment(PaymentDTO paymentDTO)
+        public void AddPayment(Payment Payment)
             {
             var payment = new Payment
                 {
                 PaymentId = Guid.NewGuid(),
-                CustomerId = paymentDTO.CustomerId,
-                InvoiceId = paymentDTO.InvoiceId,
-                AmountPaid = paymentDTO.AmountPaid,
-                PaymentDate = paymentDTO.PaymentDate,
-                PaymentMethod = paymentDTO.PaymentMethod
+                CustomerId = Payment.CustomerId,
+                InvoiceId = Payment.InvoiceId,
+                AmountPaid = Payment.AmountPaid,
+                PaymentDate = Payment.PaymentDate,
+                PaymentMethod = Payment.PaymentMethod
                 };
 
             _paymentRepository.Add(payment);
             }
 
-        public void UpdatePayment(Guid paymentId, PaymentDTO paymentDTO)
+        public void UpdatePayment(Guid paymentId, Payment Payment)
             {
             var payment = _paymentRepository.GetById(paymentId);
             if (payment == null)
@@ -71,9 +71,9 @@ namespace OdaMeClone.Services
                 throw new KeyNotFoundException("Payment not found");
                 }
 
-            payment.AmountPaid = paymentDTO.AmountPaid;
-            payment.PaymentDate = paymentDTO.PaymentDate;
-            payment.PaymentMethod = paymentDTO.PaymentMethod;
+            payment.AmountPaid = Payment.AmountPaid;
+            payment.PaymentDate = Payment.PaymentDate;
+            payment.PaymentMethod = Payment.PaymentMethod;
 
             _paymentRepository.Update(payment);
             }
