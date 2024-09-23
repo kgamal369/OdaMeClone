@@ -26,12 +26,16 @@
   - **Apartment Photos:** Collection of photos associated with the apartment.
   - **Packages List:** Collection of packages associated with the apartment.
   - **Addons List:** Collection of addons associated with the apartment.
-  - **Status:** Current status of the apartment (e.g., Booked, In Progress, For Sale, Template).
-  
+  - **Status:** Current status of the apartment (e.g., Booked, In Inquiry ,  In Progress, For Sale, Template).
+  __________
+  Attributes filled in case of apartment status is  Booked, In Inquiry and  In Progress:
   - **Customer ID:** If booked or in progress, this field contains the ID of the customer who owns or has reserved the apartment.
-  - **Assigned Package:** Mandatory field that holds the package selected by the customer from the available package list.
+  - **List of Assigned Package:** Mandatory field that holds the package selected by the customer from the available package list.
   - **List of Assigned Addons:** Optional list of addons selected by the customer, with restrictions on the number of addons per category.
   - **Total Price:** Calculated field representing the sum of the assigned package price and the selected addons.
+  - ** AvailabilityDate :**Date when the package work and all addons will be valid in the apartment unit 
+
+
 
 #### 1.3. Package
 - **Overview:**
@@ -65,6 +69,7 @@
   - **Linked Apartments:** List of apartments owned by the customer, including details about their project locations.
   - **Linked Invoices:** List of invoices associated with the customer.
 
+
 #### 1.6. Booking
 - **Overview:**
   - Represents the process of reserving an apartment by a customer, including the selection of packages, addons, and the generation of invoices.
@@ -72,15 +77,17 @@
 - **Attributes:**
   - **Booking ID:** Unique identifier.
   - **Customer ID:** The ID of the customer making the booking.
-  - **Apartment ID:** The ID of the apartment being booked.
+  - **List of Apartment ID:** The ID of the apartment being booked.
   - **Created DateTime:** Timestamp when the booking was created.
-  - **Status:** Current status of the booking (e.g., Pending, In Progress, Under Review, Approved, Rejected).
+  - **Status:** Current status of the booking (e.g., Pending, In inquiry,  In Progress, Under Review, Approved, Rejected).
   - **Last Modified DateTime:** Timestamp of the last status change.
   - **Assigned Person:** The staff member assigned to follow up on the booking.
   - **List of Invoices:** Collection of invoices generated for this booking.
   - **Total Amount:** Total price calculated from the apartment, packages, and addons selected.
   - **Remaining Amount:** Dynamic calculation of the total amount minus the sum of paid invoices.
   - **Payment Method:** Method chosen for payment (e.g., Card, Cash, Invoice, Bank Transfer).
+
+
 
 #### 1.7. Invoices
 - **Overview:**
@@ -89,11 +96,16 @@
 - **Attributes:**
   - **Invoice ID:** Unique identifier.
   - **Customer ID:** ID of the customer associated with the invoice.
+  - **Booking ID: ** this invoice related to which booking Id
   - **Apartment ID:** ID of the apartment related to the invoice.
   - **Status:** Status of the invoice (e.g., Paid, Rejected, Pending).
-  - **Amount:** Total amount for the invoice.
-  - **Paid Date:** Date when the invoice was paid.
+  - **InvoiceAmount:** Total amount for the invoice.
+  - **Paid Date:** Date when the invoice was paid or will be paid.
   - **Payment Method:** Method of payment used for this invoice.
+  - **Payment DueDate:
+  - **InvoiceStatus : Enum for invoice status
+  - **CreatedDateTime: Created Date Time
+  - **LastModifiedDate: Last date time of Modified
 
 #### 1.8. User
 - **Overview:**
@@ -109,19 +121,38 @@
 #### 1.9. Role
 - **Overview:**
   - Represents different access levels and permissions within the system.
+  - **Attributes:**
+  - ** Role ID:** Unique identifier.
+  - ** Role Name:** Name of the role (e.g., Admin, Sales, Customer).
+  - ** Description : ** Description of the role
+  - ** List of Permissions:** List of permissions associated with the role.
+  - ** List of Users : ** list of Users related to this roles
+  - ** CreatedAt :
+  - ** updatedAt : 
+
+
+
+#### 1.10. Permissions 
+- **Overview:**
+  - Represents the Permissions for each Role (CRUD) , Which role could add or remove or updated or read which entity
 
 - **Attributes:**
-  - **Role ID:** Unique identifier.
-  - **Role Name:** Name of the role (e.g., Admin, Sales, Customer).
-  - **Permissions:** List of permissions associated with the role.
+- ** PermissionId:** Unique identifier.
+- ** EntityName: ** E.g., "Project", "Apartment", etc. The entity which had permissions on
+- ** Action : ** E.g "Read", "Add", "Edit", "Remove"
+- ** List of Roles :** 
+
+
+
+ 
 
 ---
 
 ### 2. Domain Model Relationships
 
 - **Project - Apartment:** One-to-Many relationship; a project contains multiple apartments.
-- **Apartment - Package:** One-to-Many relationship; an apartment can have multiple packages available, but only one can be assigned.
-- **Apartment - Addons:** One-to-Many relationship; an apartment can have multiple addons, with limitations on the number of each type.
+- **Apartment - Package:** One-to-Many relationship; an apartment can have multiple available packages , but must have only one can be assigned package.
+- **Apartment - Addons:** Many-to-Many relationship; an apartment can have multiple available addons, and could have multiple assigned addons.
 - **Customer - Apartment:** Many-to-Many relationship; a customer can own multiple apartments, and an apartment can be linked to multiple customers (if considered for multiple ownership).
 - **Booking - Apartment:** One-to-Many relationship; a booking is associated with one apartment, and an apartment can be involved in multiple bookings (e.g., pending, confirmed).
 - **Booking - Invoices:** One-to-Many relationship; a booking can generate multiple invoices.
@@ -134,27 +165,58 @@
 #### 3.1. Project Management Functions
 - **Add Apartment:** Function to add an apartment to the project’s apartment list.
 - **Remove Apartment:** Function to remove an apartment from the project’s apartment list.
-  
+- **GetTotalUnits: ** Get Counts of the related Apartment number 
+
+
 #### 3.2. Apartment Management Functions
 - **Add Package:** Function to add a package to the apartment’s package list.
 - **Remove Package:** Function to remove a package from the apartment’s package list.
 - **Add Addon:** Function to add an addon to the apartment’s addon list.
 - **Remove Addon:** Function to remove an addon from the apartment’s addon list.
+- ** SetApartmentStatus() : All kind of status
+
+Function in case of Apartment status is  Booked, In Inquiry and  In Progress:
+- **Add AssignedPackage:** Function to add a package to the apartment’s package list.
+- **Remove AssignedPackage:** Function to remove a package from the apartment’s package list.
+- **Add AssignedAddon:** Function to add an addon to the apartment’s addon list.
+- **Remove AssignedAddon:** Function to remove an addon from the apartment’s addon list.
 - **Calculate Total Price:** Function to calculate the total price based on the selected package and addons, including the quantity of each addon.
+
+
 
 #### 3.3. Package and Addon Management Functions
 - **Cascading Price Updates:** When the price of a package or addon is updated, this change should propagate throughout the system, updating all related calculations and entities automatically.
 
-#### 3.4. Booking Workflow
-- **Step 1:** Customer views available apartments, packages, and addons.
-- **Step 2:** Customer selects an apartment and creates a booking.
-- **Step 3:** System clones the apartment instance with status "Booked."
-- **Step 4:** Customer selects a package and assigns it.
-- **Step 5:** Customer selects addons and their quantities, which are then assigned.
-- **Step 6:** Total amount is calculated, and the invoice is generated.
-- **Step 7:** Customer reviews and confirms the booking.
-- **Step 8:** Booking status workflow begins, with status updates at each step (Pending, In Progress, Under Review, Approved, Rejected).
-- **Step 9:** As payments are made, invoices are marked as paid, and the remaining amount is updated dynamically.
+
+
+#### 3.4. Booking Workflow :
+- **Step 1:** Customer views select apartments from a project.
+- **Step 2:** Customer selects and assigned package and addons from the available package and addons and their quantities, which are then assigned.
+- **Step 3:** System clones the apartment instance with status "In Inquiry."
+               and the main one remain with empty without assigned package and addons but the cloned one had an assigned package and addons
+- **Step 4:** Total amount is calculated, and the invoice is generated.
+- **Step 5:** Customer reviews and confirms the booking and then press send.
+- **Step 6:** Booking status workflow begins, with status updates at each step (Pending, inquiry , In Progress, Under Review, Approved, Rejected).
+- **Step 5:** As payments are made, invoices are marked as paid, and the remaining amount is updated dynamically.
+
+
+Booking funtions:
+- StartBooking: start the work flow (clone the apartment with new Id , the assigned package and addons , change status and made all price calculation )
+- AssignPackage: assigned  and set package from the available one to AssignedPackage in the booking apartment
+- AssignAddOn: assigned  and set addOns from the available one to AssignedAddon in the booking apartment
+- FinalizeBooking: generate the invoice and price and send it to the related opertor
+- GetRemainingPaymentAmount: TotalPrice - Total and Sum of Paid related Invoices
+- GetPaidAmount: Total and Sum of Paid Related Inovoices
+
+####3.5 Customer Functions :
+- AddApartment : Add an Apartment to the apartmentlist of the customer
+- AddInvoice : Add an Invoice to the invoicetlist of the customer
+- RemoveApartment : Remove an Apartment to the apartmentlist of the customer
+- RemoveInvoice : Remove an Invoice to the invoicetlist of the customer
+
+
+####3.6 Permissions Functions :
+- HasPermission:   return: bool HasPermission(User user, string entityName, string action)
 
 ---
 

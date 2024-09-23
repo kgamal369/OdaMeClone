@@ -29,7 +29,6 @@ namespace OdaMeClone.Data.Repositories
             {
             return _context.Roles
                 .Include(r => r.Users)
-                .Include(r => r.RolePermissions)
                 .ToList();
             }
 
@@ -37,7 +36,6 @@ namespace OdaMeClone.Data.Repositories
             {
             return _context.Roles
                 .Include(r => r.Users)
-                .Include(r => r.RolePermissions)
                 .FirstOrDefault(r => r.RoleId == id);
             }
 

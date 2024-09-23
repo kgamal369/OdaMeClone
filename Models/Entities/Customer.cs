@@ -24,6 +24,7 @@ namespace OdaMeClone.Models
         [StringLength(15, MinimumLength = 10, ErrorMessage = "Contact number must be between 10 and 15 digits.")]
         [Phone(ErrorMessage = "Invalid phone number.")]
         public string ContactNumber { get; set; } // Customer's contact number
+        public ICollection<User> Users { get; set; } = new List<User>();
 
         public virtual ICollection<Apartment> LinkedApartments { get; set; } // List of owned apartments
 

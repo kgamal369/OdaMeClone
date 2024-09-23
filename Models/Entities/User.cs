@@ -41,7 +41,6 @@ namespace OdaMeClone.Models
         public string? TwoFactorCode { get; set; }
         public DateTime? TwoFactorCodeExpiry { get; set; }
 
-        // Password reset fields
         public string? PasswordResetToken { get; set; }
         public DateTime? PasswordResetTokenExpiry { get; set; }
         }

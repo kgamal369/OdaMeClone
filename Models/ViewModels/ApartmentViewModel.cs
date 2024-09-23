@@ -7,6 +7,8 @@ namespace OdaMeClone.Models.ViewModels
         {
         public Guid ApartmentId { get; set; }
         public string? ApartmentName { get; set; }
+        public string ApartmentType { get; set; }
+
         public string? ProjectName { get; set; } // Display the project name
         public double Space { get; set; }
         public string? ViewType { get; set; }

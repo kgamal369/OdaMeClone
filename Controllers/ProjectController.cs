@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,6 +15,8 @@ namespace OdaMeClone.Controllers
     {
     [Route("api/Projects")]
     [ApiController]
+    [Authorize] // Ensure all methods require authorization
+
     public class ProjectController : ControllerBase
         {
         private readonly ProjectService _projectService;
@@ -30,6 +33,7 @@ namespace OdaMeClone.Controllers
             }
 
         [HttpGet]
+        [Authorize(Roles = "Admin, Manager, User")] // Allow access for Admin, Manager, and User roles
         public IActionResult GetAllProjects()
             {
             var projects = _projectService.GetAllProjects();
@@ -37,6 +41,8 @@ namespace OdaMeClone.Controllers
             }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin, Manager, User")] // Allow access for Admin, Manager, and User roles
+
         public IActionResult GetProjectById(Guid id)
             {
             try

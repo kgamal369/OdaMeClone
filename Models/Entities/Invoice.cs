@@ -57,9 +57,7 @@ namespace OdaMeClone.Models
                 {
                 throw new ArgumentException("Payment amount must be greater than zero.");
                 }
-
             Amount -= amountPaid;
-
             if (Amount <= 0)
                 {
                 Amount = 0; // Ensure amount does not go negative
@@ -70,10 +68,7 @@ namespace OdaMeClone.Models
                 {
                 PaymentStatus = PaymentStatus.PartiallyPaid;
                 }
-
             context.SaveChanges();
             }
         }
-
-
     }

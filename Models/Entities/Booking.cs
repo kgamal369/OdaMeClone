@@ -45,6 +45,7 @@ namespace OdaMeClone.Models
 
         [Required]
         public PaymentMethod PaymentMethod { get; set; } // Enum for Payment method
+        public ICollection<User> Users { get; set; } = new List<User>();
 
         public Booking()
             {
@@ -75,8 +76,8 @@ namespace OdaMeClone.Models
             context.SaveChanges();
 
             // Assign the cloned apartment to this booking
-            this.Apartment = newApartment;
-            this.CustomerId = customer.CustomerId;
+            Apartment = newApartment;
+            CustomerId = customer.CustomerId;
 
             context.Bookings.Add(this);
             context.SaveChanges();
@@ -136,11 +137,11 @@ namespace OdaMeClone.Models
             var invoice = new Invoice
                 {
                 InvoiceId = Guid.NewGuid(),
-                BookingId = this.BookingId,
-                CustomerId = this.CustomerId,
-                ApartmentId = this.Apartment.ApartmentId,
+                BookingId = BookingId,
+                CustomerId = CustomerId,
+                ApartmentId = Apartment.ApartmentId,
                 Amount = totalAmount,
-                PaymentMethod = this.PaymentMethod,
+                PaymentMethod = PaymentMethod,
                 CreatedDateTime = DateTime.Now,
                 InvoiceStatus = InvoiceStatus.Pending
                 };
@@ -150,21 +151,17 @@ namespace OdaMeClone.Models
             context.SaveChanges();
 
             // Update booking status
-            this.BookingStatus = BookingStatus.Finalized;
-            this.LastModifiedDateTime = DateTime.Now;
-
+            BookingStatus = BookingStatus.Finalized;
+            LastModifiedDateTime = DateTime.Now;
             context.SaveChanges();
             }
 
         public void UpdateBookingStatus(OdaDbContext context, BookingStatus status)
             {
-            this.BookingStatus = status;
-            this.LastModifiedDateTime = DateTime.Now;
+            BookingStatus = status;
+            LastModifiedDateTime = DateTime.Now;
 
             context.SaveChanges();
             }
         }
-
-
-
     }

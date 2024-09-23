@@ -41,11 +41,9 @@ namespace OdaMeClone.Models
         [ForeignKey("Customer")]
         public Guid? CustomerId { get; set; } // Foreign Key to Customer, nullable if not booked
         public virtual Customer Customer { get; set; } // Navigation property to Customer
-
+        public ICollection<User> Users { get; set; } = new List<User>();
 
         public virtual ICollection<Package> AvailablePackages { get; set; } // List of associated available packages
-
-        //    public virtual ICollection<AddOn> AddonsList { get; set; } // List of associated available addons
 
         [ForeignKey("AssignedPackage")]
         public Guid? AssignedPackageId { get; set; } // Foreign Key to Assigned Package
@@ -58,19 +56,16 @@ namespace OdaMeClone.Models
         // Calculated field for total price
         [NotMapped]
         public decimal? TotalPrice => CalculateTotalPrice();
-
         // Additional fields for more detailed apartment attributes
         public int FloorNumber { get; set; } // Floor number of the apartment
         public string ViewType { get; set; } // e.g., Sea View, Garden View
         public DateTime? AvailabilityDate { get; set; } // Date when the apartment becomes available
-
         // Constructor initializing collections
         public Apartment()
             {
             ApartmentPhotos = new List<byte[]>();
             AvailablePackages = new List<Package>();
             AvailableApartmentAddOns = new List<ApartmentAddOn>();
-
             }
         public decimal CalculateTotalPrice()
             {
@@ -78,8 +73,6 @@ namespace OdaMeClone.Models
             // Calculate based on the related ApartmentAddOns
             return (AssignedPackage?.Price ?? 0) + (AvailableApartmentAddOns?.Sum(a => a.AddOn.PricePerUnit * a.InstalledUnits) ?? 0);
             }
-
-
         // Method to add a package
         public void AddPackage(Package package)
             {
@@ -94,10 +87,6 @@ namespace OdaMeClone.Models
             {
             AvailablePackages?.Remove(package);
             }
-
-        // Method to calculate the total price
-
-        // Method to validate addon selections
         public bool ValidateAddons()
             {
             foreach (var addon in AssignedApartmentAddOns)

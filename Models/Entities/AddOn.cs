@@ -46,7 +46,7 @@ namespace OdaMeClone.Models
 
             // Fetch all apartments that have this addon assigned
             var apartments = context.Apartments
-                  .Where(a => a.AssignedApartmentAddOns.Any(ad => ad.AddOnId == this.AddOnId))
+                  .Where(a => a.AssignedApartmentAddOns.Any(ad => ad.AddOnId == AddOnId))
                   .ToList();
 
             foreach (var apartment in apartments)
@@ -67,5 +67,16 @@ namespace OdaMeClone.Models
             }
         }
 
+    public class ApartmentAddOn
+        {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)] // The DB will auto-generate the Guid
+        public Guid ApartmentAddOnId { get; set; }
+        public Guid ApartmentId { get; set; }
+        public Apartment? Apartment { get; set; }
+        public Guid AddOnId { get; set; }
+        public AddOn? AddOn { get; set; }
+        public int InstalledUnits { get; set; } // Additional property for installed units
+        }
 
     }

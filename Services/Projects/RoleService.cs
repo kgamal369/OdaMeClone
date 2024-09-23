@@ -27,7 +27,6 @@ namespace OdaMeClone.Services
                 CreatedAt = r.CreatedAt,
                 UpdatedAt = r.UpdatedAt,
                 Users = (ICollection<User>)r.Users.Select(u => u.RoleId).ToList(),
-                RolePermissions = (ICollection<RolePermission>)r.RolePermissions.Select(rp => rp.RoleId).ToList()
                 });
             }
 
@@ -47,7 +46,6 @@ namespace OdaMeClone.Services
                 CreatedAt = role.CreatedAt,
                 UpdatedAt = role.UpdatedAt,
                 Users = (ICollection<User>)role.Users.Select(u => u.RoleId).ToList(),
-                RolePermissions = (ICollection<RolePermission>)role.RolePermissions.Select(rp => rp.RoleId).ToList()
                 };
             }
 

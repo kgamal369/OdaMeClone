@@ -33,6 +33,7 @@ namespace OdaMeClone.Models
         public byte[]? ProjectLogo { get; set; } // Project logo or photo
 
         public virtual ICollection<Apartment> Apartments { get; set; } // List of associated apartments
+        public ICollection<User> Users { get; set; } = new List<User>();
 
         public Project()
             {

@@ -11,6 +11,8 @@ this is my current project structure
     1.6. ProjectController.cs
     1.7. RoleController.cs
     1.8. UserController.cs
+    1.9. PermissionController.cs
+    
     
 
 2. Data Folder - contain : 
@@ -27,6 +29,7 @@ this is my current project structure
         2.1.10. ProjectRepository.cs
         2.1.11. RoleRepository.cs
         2.1.12. UserRepository.cs
+        2.1.13. PermissionRepository.cs
     
     2.2.Seeders -namespace OdaMeClone.Data
         2.2.1.OdaDbSeeder.cs
@@ -50,7 +53,8 @@ this is my current project structure
         3.2.7.PaymentDto.cs
         3.2.8.ProjectDto.cs
         3.2.9.RoleDto.cs
-        3.2.10.RolePermissionDto.cs
+        3.2.10.PermissionDto.cs
+        3.2.11.UserDto.cs
         
 
 4. Models Folder -namespace OdaMeClone.Models - Contain :
@@ -59,13 +63,13 @@ this is my current project structure
         4.1.2. Apartment.cs
         4.1.3. Booking.cs
         4.1.4. Customer.cs
-        4.1.3. Invoice.cs
-        4.1.4. Package.cs
-        4.1.5. Payment.cs
-        4.1.6. Project.cs
-        4.1.7. Role.cs
-        4.1.8. RolePermission.cs
+        4.1.5. Invoice.cs
+        4.1.6. Package.cs
+        4.1.7. Payment.cs
+        4.1.8. Project.cs
+        4.1.9. Role.cs 
         4.1.10. User.cs
+        4.1.11. Permission.cs
     4.2.Others
         4.2.1. Enum.cs    
     4.3.ViewModels
@@ -73,12 +77,16 @@ this is my current project structure
         4.3.2. ApartmentViewModel.cs
         4.3.3. BookingViewModel.cs
         4.3.4. CustomerViewModel.cs
-        4.3.3. InvoiceViewModel.cs
-        4.3.4. PackageViewModel.cs
-        4.3.5. PaymentViewModel.cs
-        4.3.6. ProjectViewModel.cs
-        4.3.7. RoleViewModel.cs
-        4.3.8. UserViewModel.cs
+        4.3.5. InvoiceViewModel.cs
+        4.3.6. PackageViewModel.cs
+        4.3.7. PaymentViewModel.cs
+        4.3.8. ProjectViewModel.cs
+        4.3.9. RoleViewModel.cs
+        4.3.10. UserViewModel.cs
+        4.1.11. Permission.cs
+
+
+    
 
 5.Properties Folder contain : 
     5.1.LaunchSettings.json
@@ -93,12 +101,13 @@ this is my current project structure
         4.3.2. ApartmentService.cs
         4.3.3. BookingService.cs
         4.3.4. CustomerService.cs
-        4.3.3. InvoiceVService.cs
-        4.3.4. PackageService.cs
-        4.3.5. PaymentService.cs
-        4.3.6. ProjectService.cs
-        4.3.7. RoleService.cs
-        4.3.8. UserService.cs
+        4.3.5. InvoiceVService.cs
+        4.3.6. PackageService.cs
+        4.3.7. PaymentService.cs
+        4.3.8. ProjectService.cs
+        4.3.9. RoleService.cs
+        4.3.10. UserService.cs
+        4.3.11. PermissionService.cs
 
 7.appsettings.json
 8.appsetting.Development.json
@@ -107,3 +116,4 @@ this is my current project structure
 11.OdaMeclone.generated.sln
 12.OdaMeclone.http
 13.Program.cs
+14.Migrations

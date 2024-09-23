@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -6,6 +9,7 @@ using Microsoft.OpenApi.Models;
 using OdaMeClone.Data;
 using OdaMeClone.Data.Repositories;
 using OdaMeClone.Data.Seeders;
+using OdaMeClone.Models;
 using OdaMeClone.Services;
 
 var builder = WebApplication.CreateBuilder(args);
