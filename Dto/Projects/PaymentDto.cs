@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
+
 using OdaMeClone.Models;
 
 namespace OdaMeClone.Dtos.Projects
@@ -10,6 +13,8 @@ namespace OdaMeClone.Dtos.Projects
         public Guid InvoiceId { get; set; }
         public decimal AmountPaid { get; set; }
         public DateTime PaymentDate { get; set; }
+
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public PaymentMethod PaymentMethod { get; set; }
         }
     }

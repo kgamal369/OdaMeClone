@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using OdaMeClone.Models;
 
 namespace OdaMeClone.Dtos.Projects
@@ -7,6 +9,8 @@ namespace OdaMeClone.Dtos.Projects
         {
         public Guid AddOnId { get; set; }
         public string? AddOnName { get; set; }
+
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public AddOnType AddOnType { get; set; }
         public decimal PricePerUnit { get; set; }
         public int MaxUnits { get; set; }

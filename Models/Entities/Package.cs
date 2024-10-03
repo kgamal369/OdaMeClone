@@ -17,13 +17,15 @@ namespace OdaMeClone.Models
         public string? PackageName { get; set; } // Name of the package
 
         [Required]
+        [EnumDataType(typeof(PackageType), ErrorMessage = "Invalid Package Type.")]
         public PackageType PackageType { get; set; } // Enum for Package Type
 
         [Required]
         [Column(TypeName = "decimal(18,2)")]
         [Range(0, 100000000, ErrorMessage = "Price must be a positive value.")]
         public decimal Price { get; set; } // Price of the package
-        public ICollection<User> Users { get; set; } = new List<User>();
+
+        public ICollection<User> Users { get; set; } = [];
 
         // Method to update package price and cascade the change
         public void UpdatePackagePrice(OdaDbContext context, decimal newPrice)

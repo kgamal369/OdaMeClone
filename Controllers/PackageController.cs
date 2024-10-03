@@ -39,29 +39,45 @@ namespace OdaMeClone.Controllers
             }
 
         [HttpPost]
-        public IActionResult AddPackage([FromBody] Package packageDTO)
+        public IActionResult AddPackage([FromBody] PackageDTO packageDTO)
             {
             if (packageDTO == null)
                 {
                 return BadRequest("Invalid package data.");
                 }
+               // Convert DTO to entity
+            var package = new Package
+            {
+                PackageName = packageDTO.PackageName,
+                PackageType = packageDTO.PackageType,
+                Price = packageDTO.Price
+            };
 
-            _packageService.AddPackage(packageDTO);
-            return CreatedAtAction(nameof(GetPackageById), new { id = packageDTO.PackageId }, packageDTO);
+            _packageService.AddPackage(package);
+            return CreatedAtAction(nameof(GetPackageById), new { id = package.PackageId }, package);
             }
 
         [HttpPut("{id}")]
-        public IActionResult UpdatePackage(Guid id, [FromBody] Package packageDTO)
+        public IActionResult UpdatePackage(Guid id, [FromBody] PackageDTO packageDTO)
             {
             try
+            {
+                // Convert DTO to entity
+                var package = new Package
                 {
-                _packageService.UpdatePackage(id, packageDTO);
+                    PackageId = id,
+                    PackageName = packageDTO.PackageName,
+                    PackageType = packageDTO.PackageType,
+                    Price = packageDTO.Price
+                };
+
+                _packageService.UpdatePackage(id, package);
                 return NoContent();
-                }
+            }
             catch (KeyNotFoundException ex)
-                {
+            {
                 return NotFound(ex.Message);
-                }
+            }
             }
 
         [HttpDelete("{id}")]

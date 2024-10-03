@@ -35,49 +35,59 @@ namespace OdaMeClone.Models
         // Navigation properties to ensure proper relationship mapping
         [Required]
         public Guid ProjectId { get; set; }  // Foreign Key to Project
-        public virtual Project Project { get; set; } // Navigation property to Project
+        public virtual Project Project { get; set; } = null!;// Navigation property to Project
 
         // Conditional attributes
         [ForeignKey("Customer")]
         public Guid? CustomerId { get; set; } // Foreign Key to Customer, nullable if not booked
-        public virtual Customer Customer { get; set; } // Navigation property to Customer
-        public ICollection<User> Users { get; set; } = new List<User>();
+        public virtual Customer? Customer { get; set; } // Navigation property to Customer
+        public ICollection<User> Users { get; set; } = [];
 
-        public virtual ICollection<Package> AvailablePackages { get; set; } // List of associated available packages
+        public virtual ICollection<Package> AvailablePackages { get; set; } = []; // List of associated available packages
 
         [ForeignKey("AssignedPackage")]
         public Guid? AssignedPackageId { get; set; } // Foreign Key to Assigned Package
         public virtual Package AssignedPackage { get; set; } // Navigation Property
-        public virtual ICollection<ApartmentAddOn> AvailableApartmentAddOns { get; set; }
+        public virtual ICollection<ApartmentAddOn> AvailableApartmentAddOns { get; set; } = [];
 
         // Navigation property for many-to-many relationship with AddOns via ApartmentAddOn
-        public virtual ICollection<ApartmentAddOn> AssignedApartmentAddOns { get; set; } // List of selected addons (Optional)
+        public virtual ICollection<ApartmentAddOn> AssignedApartmentAddOns { get; set; } = [];// List of selected addons (Optional)
 
         // Calculated field for total price
         [NotMapped]
         public decimal? TotalPrice => CalculateTotalPrice();
         // Additional fields for more detailed apartment attributes
         public int FloorNumber { get; set; } // Floor number of the apartment
-        public string ViewType { get; set; } // e.g., Sea View, Garden View
+        public string ViewType { get; set; } = string.Empty; // e.g., Sea View, Garden View
         public DateTime? AvailabilityDate { get; set; } // Date when the apartment becomes available
         // Constructor initializing collections
-        public Apartment()
-            {
-            ApartmentPhotos = new List<byte[]>();
-            AvailablePackages = new List<Package>();
-            AvailableApartmentAddOns = new List<ApartmentAddOn>();
-            }
+        // public Apartment(Guid projectId, double space, Project project )
+        //     {
+        //     ProjectId = projectId;
+        //     Project = project;
+        //     ApartmentStatus = ApartmentStatus.ForSale;
+        //     Space = space;
+        //     }
+        //  public static Apartment Create(Guid projectId, double space, Project project)
+        // {
+        //     if (double.IsNaN(space)) throw new ArgumentException("Space is required.");
+        //     if (project == null) throw new ArgumentNullException(nameof(project));
+
+        //     return new Apartment(projectId, space, project);
+        // }
+
         public decimal CalculateTotalPrice()
             {
             // Apply discounts, taxes, or other adjustments here if needed
             // Calculate based on the related ApartmentAddOns
-            return (AssignedPackage?.Price ?? 0) + (AvailableApartmentAddOns?.Sum(a => a.AddOn.PricePerUnit * a.InstalledUnits) ?? 0);
+            return (AssignedPackage?.Price ?? 0) +
+             (AvailableApartmentAddOns?.Sum(a => a.AddOn.PricePerUnit * a.InstalledUnits) ?? 0);
             }
         // Method to add a package
         public void AddPackage(Package package)
             {
             if (AvailablePackages == null)
-                AvailablePackages = new List<Package>();
+                AvailablePackages = [];
 
             AvailablePackages.Add(package);
             }
@@ -87,6 +97,20 @@ namespace OdaMeClone.Models
             {
             AvailablePackages?.Remove(package);
             }
+        public bool ValidatePackageStatus()
+            {
+            if (ApartmentStatus == ApartmentStatus.Booked ||
+                ApartmentStatus == ApartmentStatus.InProgress ||
+                ApartmentStatus == ApartmentStatus.InReview)
+                {
+                if (AssignedPackage == null)
+                    {
+                    throw new InvalidOperationException("An apartment must have an assigned package when the status is Booked, In Progress, or In Review.");
+                    }
+                }
+            return true;
+            }
+
         public bool ValidateAddons()
             {
             foreach (var addon in AssignedApartmentAddOns)
@@ -98,6 +122,7 @@ namespace OdaMeClone.Models
                 }
             return true;
             }
+
 
         // Method to propagate price updates throughout the system
         public void UpdatePrices(decimal newPackagePrice, Dictionary<Guid, decimal> addonPrices)
@@ -117,6 +142,12 @@ namespace OdaMeClone.Models
                         }
                     }
                 }
+            }
+
+        public void UpdateApartmentPriceAndValidate()
+            {
+            ValidatePackageStatus();
+            ValidateAddons();
             }
         }
     }
